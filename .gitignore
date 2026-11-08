@@ -1,0 +1,6 @@
+build/*
+!build/.gitkeep
+.local/
+STATUS.txt
+*.log
+__pycache__/

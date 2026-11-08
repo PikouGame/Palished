@@ -1,0 +1,41 @@
+# Palished
+
+Small UI improvements for a smoother day in Palworld.
+
+- **R** repairs the selected item at a repair bench.
+- **Ctrl+R** opens the normal **Repair All** confirmation.
+- Repair buttons show their keyboard shortcuts while preserving the game's current language.
+- A compact bar and percentage show the equipped tool's durability in the weapon HUD. Blue normally, orange below 30%, red below 10%.
+
+Repair shortcuts only act in the repair-bench menu. Disabled buttons remain disabled, the pending-repair overlay blocks repeat requests, and the game/server keeps its normal repair costs. The HUD reads durability; it does not change it.
+
+## Install
+
+**Client only.** Requires a compatible [UE4SS Experimental (Palworld)](https://www.nexusmods.com/palworld/mods/2237) installation; no server mod is required. UE4SS is not bundled.
+
+1. Close Palworld. Extract the `PKRepairKeys` folder into your existing UE4SS `Mods` folder, usually `Pal/Binaries/Win64/ue4ss/Mods/`.
+2. Use the loader you already have. For a Workshop-installed UE4SS loader, its mod folder may instead be `Mods/NativeMods/UE4SS/Mods/`.
+3. Keep the included `enabled.txt`. If your loader uses an explicit mods list, enable `PKRepairKeys` there without replacing the other entries.
+4. In your existing `UE4SS-settings.ini`, set `HotReloadEnabled = 0` if hot reload uses Ctrl+R. Otherwise that loader shortcut conflicts with Repair All.
+5. Restart Palworld. Open a repair bench to use R or Ctrl+R; equip a tool to see its durability.
+
+**Already using PKRepairKeys?** Replace that existing folder. It is the same mod, now called Palished; do not install a second copy. The internal folder name is retained for compatibility.
+
+Remove only the `PKRepairKeys` folder and its loader-list entry while the game is closed. No direct save or item edits are performed.
+
+## Version and testing
+
+First public package: **1.1.1-alpha**, based on the existing in-game mod.
+Tested on Palworld **1.0.5.102999**, UE4SS Palworld fork **2281fa31**, running Windows executables through Wine/Proton. The author confirmed R, Ctrl+R and the durability display in game. Automated checks cover menu/disabled-button guards, native repair routes, Ctrl priority, cooldown, and localized button hints.
+
+Not verified across other game/loader versions, native Windows OS installations, controller bindings, or other HUD mods. UI names may change in future game updates. The durability HUD is for the equipped tool/weapon, not every inventory item.
+
+## Share your experience
+
+We’d love to hear how Palished feels in your game! Leave a comment, share your experience, or [report a bug](https://github.com/PikouGame/Palished/issues) so we can investigate and improve it. For bugs, include your game/UE4SS versions, what you expected, and steps to reproduce. Remove personal information before sharing logs.
+
+## Credits and permissions
+
+Created by PikouGame with OpenAI Codex: AI-generated Lua code, tests and documentation under the author's direction. The author tested the mod in game. The screenshot is actual gameplay, not generated imagery. No AI service runs inside the mod.
+
+Unofficial Palworld mod, not affiliated with Pocketpair. All rights reserved; download and use are allowed. Reuploads, published modifications and reuse require permission. See [LICENSE.txt](LICENSE.txt).

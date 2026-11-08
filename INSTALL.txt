@@ -1,0 +1,30 @@
+Palished 1.1.1-alpha — UI enhancements for Palworld
+
+R: selected-item repair. Ctrl+R: normal Repair All confirmation.
+Only active at a repair bench; normal costs and disabled-button rules apply.
+Equipped-tool durability appears as a compact HUD bar and percentage.
+
+CLIENT ONLY. Compatible UE4SS for Palworld is required, not bundled.
+Close Palworld; extract PKRepairKeys into your existing UE4SS Mods directory.
+Keep enabled.txt. If using a mods list, enable PKRepairKeys without replacing
+other entries. Do not install duplicate UE4SS loaders or duplicate mod copies.
+Manual loader path: Pal/Binaries/Win64/ue4ss/Mods/PKRepairKeys
+Workshop loader path: Mods/NativeMods/UE4SS/Mods/PKRepairKeys
+Disable UE4SS hot reload (HotReloadEnabled = 0 in UE4SS-settings.ini) if it is
+bound to Ctrl+R. Restart Palworld after installing. No server install needed.
+Existing PKRepairKeys users: replace that folder; Palished is its public name.
+
+Tested: Palworld1.0.5.102999, UE4SS2281fa31, Windows executable via Wine/Proton.
+R, Ctrl+R and durability display confirmed by the author. Other versions,
+native Windows OS, controller bindings and HUD-mod conflicts remain unverified.
+
+Uninstall: close the game; remove only PKRepairKeys and its loader-list entry.
+No direct inventory, durability, costs or save edits are performed.
+
+We’d love to hear how Palished feels! Share your experience, leave a comment,
+or report bugs so we can investigate and improve it:
+https://github.com/PikouGame/Palished/issues
+Include game/UE4SS versions and reproduction steps; remove personal log data.
+
+Author: PikouGame. AI-generated code/documentation directed and tested by the
+author. All rights reserved; see LICENSE.txt. No game or loader files bundled.
