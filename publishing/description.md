@@ -1,0 +1,54 @@
+# Palished
+
+_Small details. Smoother everyday play._
+
+Keep an eye on your tool's durability, repair with a keypress, and enjoy tidier
+equipment slots that fit Palworld's existing interface.
+
+## A cleaner inventory
+
+Aligned slots, consistent section spacing, and a right column that ends level
+with your accessories. Palworld's native styling, slot sizes and controls stay intact.
+
+![Vanilla and Palished equipment layout comparison](../assets/showcase/palished-slot-alignment.gif)
+
+_Native UI renders: original layout → Palished. Both columns and the accessory/food slots are included._
+
+## Durability at a glance
+
+A compact bar and percentage show your equipped tool or weapon's condition.
+Orange below 30%; red below 10%. Empty hands get Palworld's native fist icon
+and localized **Unarmed** label.
+
+![Equipped pickaxe with its durability display](../assets/showcase/palished-durability.png)
+
+## Quick repairs
+
+At a repair bench, **R** repairs the selected item and **Ctrl+R** opens the normal
+**Repair All** confirmation. The buttons show the shortcuts alongside their
+localized labels. Repair costs stay unchanged.
+
+## Getting started
+
+**Client only.** Requires a compatible [Palworld UE4SS loader](https://www.nexusmods.com/palworld/mods/2237).
+
+1. Close Palworld.
+2. Copy `PKRepairKeys` into your existing UE4SS `Mods` folder.
+3. If UE4SS uses Ctrl+R for hot reload, set `HotReloadEnabled = 0` in `UE4SS-settings.ini`.
+4. Restart the game.
+
+Already using PKRepairKeys? Replace that folder—it's Palished's internal name.
+See `INSTALL.txt` for details. Tested on Palworld 1.0.5.102999 with UE4SS 2281fa31
+through Proton/Wine; other versions and UI mods may need adjustments.
+
+## Share your experience
+
+We'd love to hear which little details make a difference for you! Leave a comment,
+share your experience, or [report a bug](https://github.com/PikouGame/Palished/issues)
+so we can investigate and improve Palished together.
+
+[Source and compatibility notes](https://github.com/PikouGame/Palished)
+
+_Made with OpenAI Codex under lelorax's direction. Screenshots are captured in game.
+Free to use; all rights reserved. Reuploads, published modifications and reuse
+require permission. Unofficial Palworld mod._
