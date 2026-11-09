@@ -10,7 +10,7 @@ equipment slots that fit Palworld's existing interface.
 Aligned slots, consistent section spacing, and a right column that ends level
 with your accessories. Palworld's native styling, slot sizes and controls stay intact.
 
-![Vanilla and Palished equipment layout comparison](../assets/showcase/palished-slot-alignment.gif)
+![Vanilla and Palished equipment layout comparison](https://raw.githubusercontent.com/PikouGame/Palished/0c203e5ae75115b087b299ce46325f69514f741e/assets/showcase/palished-slot-alignment.gif)
 
 _Native UI renders: original layout → Palished. Both columns and the accessory/food slots are included._
 
@@ -20,7 +20,7 @@ A compact bar and percentage show your equipped tool or weapon's condition.
 Orange below 30%; red below 10%. Empty hands get Palworld's native fist icon
 and localized **Unarmed** label.
 
-![Equipped pickaxe with its durability display](../assets/showcase/palished-durability.png)
+![Equipped pickaxe with its durability display](https://raw.githubusercontent.com/PikouGame/Palished/0c203e5ae75115b087b299ce46325f69514f741e/assets/showcase/palished-durability.png)
 
 ## Quick repairs
 
