@@ -2,8 +2,8 @@ from pathlib import Path
 import hashlib
 import zipfile
 root=Path(__file__).resolve().parents[1]
-files=['Scripts/main.lua','Scripts/durability.lua','enabled.txt','INSTALL.txt','LICENSE.txt']
-out=root/'build/Palished-1.1.1-alpha.zip'
+files=['Scripts/main.lua','Scripts/durability.lua','Scripts/equipment_layout.lua','Scripts/unarmed.lua','enabled.txt','INSTALL.txt','LICENSE.txt']
+out=root/'build/Palished-1.1.2-alpha.zip'
 out.parent.mkdir(exist_ok=True)
 with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED) as z:
     for name in files:

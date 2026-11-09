@@ -28,6 +28,7 @@ w.BndEvt__WBP_RepairEquipment_WBP_IngameMenu_Repair_K2Node_ComponentBoundEvent_2
 w.BndEvt__WBP_RepairEquipment_WBP_IngameMenu_Repair_K2Node_ComponentBoundEvent_3_OnClickedRepairAllButton__DelegateSignature=function()count.all=count.all+1 end
 package.preload.UEHelpers=function()return {GetKismetTextLibrary=function()return {Conv_StringToText=function(_,s)return s end}end}end
 package.preload.durability=function()return {}end
+package.preload.equipment_layout=function()return function()end end
 Key={R=82};ModifierKey={CONTROL=17}
 function RegisterKeyBind(_,a,b)keys[b and 'all' or 'single']=b or a end
 function ExecuteWithDelay(ms,fn)jobs[#jobs+1]={at=time+ms,fn=fn}end

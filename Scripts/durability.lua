@@ -1,6 +1,7 @@
 -- Read-only equipped-tool durability, inside the existing weapon HUD tile.
 local preview = (...) == true
 local helpers = require("UEHelpers")
+local unarmed = require("unarmed")
 local CLASS = "WBP_Ingame_PlayerGauge_Separated_C"
 local PATH = "/Game/Pal/Blueprint/UI/UserInterface/InGame/PlayerGauge/WBP_Ingame_PlayerGauge_Separated.WBP_Ingame_PlayerGauge_Separated_C"
 local state = {stopped=false, hud=nil, bar=nil, text=nil, last=nil}
@@ -11,6 +12,7 @@ local function hide()
     if valid(state.text) then state.text:SetVisibility(1) end
 end
 local function remove()
+    unarmed.clear()
     if valid(state.bar) then state.bar:RemoveFromParent() end
     if valid(state.text) then state.text:RemoveFromParent() end
     state.bar=nil;state.text=nil;state.last=nil
@@ -44,6 +46,7 @@ local function update()
     local hud=state.hud
     if not valid(hud) then return end
     if not valid(state.bar) or not valid(state.text) then create(hud) end
+    if unarmed.update(hud) then hide();state.last=nil;return end
     if hud.isRiding or not hud.Canvas_WeaponInfo:IsVisible() or not hud.Icon_Weapon:IsVisible() then hide();state.last=nil;return end
     local weapon=helpers.GetKismetSystemLibrary():Conv_SoftObjectReferenceToObject(hud.nowHasWeapon)
     if not valid(weapon) then hide();state.last=nil;return end

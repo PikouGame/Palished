@@ -1,8 +1,10 @@
-Palished 1.1.1-alpha — UI enhancements for Palworld
+Palished 1.1.2-alpha — UI enhancements for Palworld
 
 R: selected-item repair. Ctrl+R: normal Repair All confirmation.
 Only active at a repair bench; normal costs and disabled-button rules apply.
 Equipped-tool durability appears as a compact HUD bar and percentage.
+The unarmed HUD uses the native fist and localized name, without durability/ammo.
+Equipment slot alignment follows the native Weapon and Head groups.
 
 CLIENT ONLY. Compatible UE4SS for Palworld is required, not bundled.
 Close Palworld; extract PKRepairKeys into your existing UE4SS Mods directory.

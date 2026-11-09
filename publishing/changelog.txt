@@ -1,7 +1,8 @@
-1.1.1-alpha — first public Palished release
+1.1.2-alpha — small details, smoother everyday play
 
-Repair-bench R / Ctrl+R shortcuts, localized button hints, and a compact equipped-tool durability HUD. Normal costs and the Repair All confirmation are preserved. Client only; requires UE4SS. Disable UE4SS Ctrl+R hot reload to avoid a shortcut conflict.
+Align Accessory and Food slots with Weapon, keep section spacing consistent, and align the bottom of Sphere Module with the last accessory row.
+Show Palworld’s native fist icon and localized Unarmed label in the main HUD when using bare hands. Weapon icons and durability return when you equip a weapon.
+R / Ctrl+R repairs, normal repair costs and the Repair All confirmation remain unchanged. Client only; requires UE4SS.
+Replace your existing PKRepairKeys folder; do not install a second copy. No developer replay shortcuts are included.
 
-Already using PKRepairKeys? Replace its existing folder; do not install a second copy.
-
-We’d love to hear how Palished feels in your game! Leave a comment, share your experience, or report a bug so we can investigate and improve it: https://github.com/PikouGame/Palished/issues
+We’d love to hear which details make a difference for you! Leave a comment, share your experience, or report a bug so we can investigate and improve Palished together: https://github.com/PikouGame/Palished/issues

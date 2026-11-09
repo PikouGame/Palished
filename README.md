@@ -5,7 +5,10 @@ Small UI improvements for a smoother day in Palworld.
 - **R** repairs the selected item at a repair bench.
 - **Ctrl+R** opens the normal **Repair All** confirmation.
 - Repair buttons show their keyboard shortcuts while preserving the game's current language.
+- The main weapon tile shows Palworld's own fist and localized Unarmed name when you select your bare hands.
 - A compact bar and percentage show the equipped tool's durability in the weapon HUD. Blue normally, orange below 30%, red below 10%.
+- Accessory and Food slots align with Weapon, with consistent spacing between the three equipment sections.
+- The right equipment column has evenly spaced groups, with Sphere Module's bottom aligned to the last accessory row.
 
 Repair shortcuts only act in the repair-bench menu. Disabled buttons remain disabled, the pending-repair overlay blocks repeat requests, and the game/server keeps its normal repair costs. The HUD reads durability; it does not change it.
 
@@ -25,7 +28,7 @@ Remove only the `PKRepairKeys` folder and its loader-list entry while the game i
 
 ## Version and testing
 
-First public package: **1.1.1-alpha**, based on the existing in-game mod.
+Current release: **1.1.2-alpha**. Equipment alignment in both columns and the unarmed HUD were confirmed in game. The description includes native before/after renders of the complete layout.
 Tested on Palworld **1.0.5.102999**, UE4SS Palworld fork **2281fa31**, running Windows executables through Wine/Proton. The author confirmed R, Ctrl+R and the durability display in game. Automated checks cover menu/disabled-button guards, native repair routes, Ctrl priority, cooldown, and localized button hints.
 
 Not verified across other game/loader versions, native Windows OS installations, controller bindings, or other HUD mods. UI names may change in future game updates. The durability HUD is for the equipped tool/weapon, not every inventory item.
@@ -36,7 +39,7 @@ We’d love to hear how Palished feels in your game! Leave a comment, share your
 
 ## Credits and permissions
 
-Created by PikouGame with OpenAI Codex: AI-generated Lua code, tests and documentation under the author's direction. The author tested the mod in game. The screenshot is actual gameplay, not generated imagery. No AI service runs inside the mod.
+Created by lelorax with OpenAI Codex: AI-generated Lua code, tests and documentation under the author's direction. The author tested the mod in game. The screenshot is actual gameplay, not generated imagery. No AI service runs inside the mod.
 
 Unofficial Palworld mod, not affiliated with Pocketpair. All rights reserved; download and use are allowed. Reuploads, published modifications and reuse require permission. See [LICENSE.txt](LICENSE.txt).
 
@@ -47,4 +50,4 @@ lua tests/test_repair_keys.lua ./
 python3 tools/package.py
 ```
 
-The archive contains only the mod's two Lua scripts, enable marker, installation notes and license. Development tools and game assets are not bundled.
+The archive contains only the mod's Lua scripts, enable marker, installation notes and license. Development tools and game assets are not bundled.

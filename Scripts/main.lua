@@ -129,3 +129,5 @@ RegisterKeyBind(Key.R, {ModifierKey.CONTROL}, function() queue("all") end)
 log("Loaded: R = selected item; Ctrl+R = Repair All. Repair bench only; vanilla costs and confirmation.")
 local hudOK, hudError = pcall(require, "durability")
 if not hudOK then log("HUD load failed: " .. tostring(hudError)) end
+local layoutOK, layoutError = pcall(function() require("equipment_layout")(later) end)
+if not layoutOK then log("Equipment layout load failed: " .. tostring(layoutError)) end
