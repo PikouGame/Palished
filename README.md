@@ -39,7 +39,7 @@ We’d love to hear how Palished feels in your game! Leave a comment, share your
 
 ## Credits and permissions
 
-Created by lelorax with OpenAI Codex and Claude: AI-generated Lua code, tests and documentation under the author's direction. The author tested the mod in game. The screenshot is actual gameplay, not generated imagery. No AI service runs inside the mod.
+Made with OpenAI Codex and Claude under lelorax's direction. The Lua code, tests and documentation are AI-generated. The author tested the mod in game. The screenshot is actual gameplay, not generated imagery. No AI service runs inside the mod.
 
 Unofficial Palworld mod, not affiliated with Pocketpair. All rights reserved; download and use are allowed. Reuploads, published modifications and reuse require permission. See [LICENSE.txt](LICENSE.txt).
 
