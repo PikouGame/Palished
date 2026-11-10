@@ -97,7 +97,7 @@ local function dispatch(mode)
     local button = mode == "all" and panel.WBP_IngameMenu_RepairAllButton or panel.WBP_IngameMenu_RepairButton
     if not valid(button) or not button:IsVisible() then return end
     local hit = button.WBP_PalInvisibleButton
-    -- Single repair uses Visible/HitTestInvisible; Repair All uses SelfHitTestInvisible.
+    -- Enabled: Visible, or SelfHitTestInvisible for Repair All; HitTestInvisible means disabled.
     if not valid(hit) or not hit:GetIsEnabled() then return end
     local visibility = hit:GetVisibility()
     if visibility ~= 0 and not (mode == "all" and visibility == 4) then return end

@@ -79,7 +79,7 @@ keys.single();keys.all();advance(400);assert(count.single==1 and count.all==2,'d
 keys.all();keys.single();advance(400);assert(count.single==1 and count.all==3,'double dispatch Ctrl then R')
 single.WBP_PalInvisibleButton.visibility=3;press('single');assert(count.single==1,'disabled hit-test button accepted');single.WBP_PalInvisibleButton.visibility=0
 w.CanAllRepair=false;press('all');assert(count.all==3,'repair-all disallowed');w.CanAllRepair=true
-all.WBP_PalInvisibleButton.visibility=3;press('all');assert(count.all==3,'disabled Repair All');all.WBP_PalInvisibleButton.visibility=4
+w.visibility=3;press('single');press('all');assert(count.single==1 and count.all==3,'native repairing state: window hit-test invisible');w.visibility=0
 w.Overlay_Repairing.visible=true;press('single');press('all');assert(count.single==1 and count.all==3,'repair overlay ignored');w.Overlay_Repairing.visible=false
 w.active=false;press('single');press('all');assert(count.single==1 and count.all==3,'inactive/cached menu');w.active=true
 w.visible=false;press('single');assert(count.single==1,'hidden menu');w.visible=true
