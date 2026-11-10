@@ -60,13 +60,13 @@ end
 NotifyOnNewObject(path,function(candidate)
     -- Creation notifications can precede widget initialization. Read its flags
     -- after construction, on the game thread, as the other HUD modules do.
-    ExecuteWithDelay(100,function() ExecuteInGameThread(function()
+    ExecuteInGameThreadWithDelay(100,function()
         adopt(candidate);installHook()
-    end) end)
+    end)
 end)
 -- Late-load fallback only. The durability module already owns the HUD timer.
-ExecuteWithDelay(2000,function() ExecuteInGameThread(function()
+ExecuteInGameThreadWithDelay(2000,function()
     installHook()
     for _,candidate in ipairs(FindAllOf('WBP_Ingame_WeaponChange_C') or {}) do adopt(candidate) end
-end) end)
+end)
 return U

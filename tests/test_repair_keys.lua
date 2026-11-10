@@ -28,11 +28,15 @@ w.BndEvt__WBP_RepairEquipment_WBP_IngameMenu_Repair_K2Node_ComponentBoundEvent_2
 w.BndEvt__WBP_RepairEquipment_WBP_IngameMenu_Repair_K2Node_ComponentBoundEvent_3_OnClickedRepairAllButton__DelegateSignature=function()count.all=count.all+1 end
 package.preload.UEHelpers=function()return {GetKismetTextLibrary=function()return {Conv_StringToText=function(_,s)return s end}end}end
 package.preload.durability=function()return {}end
-package.preload.equipment_layout=function()return function()end end
+local layoutLater
+package.preload.equipment_layout=function()return function(later)layoutLater=later end end
 Key={R=82};ModifierKey={CONTROL=17}
 function RegisterKeyBind(_,a,b)keys[b and 'all' or 'single']=b or a end
-function ExecuteWithDelay(ms,fn)jobs[#jobs+1]={at=time+ms,fn=fn}end
-function ExecuteInGameThread(fn)fn()end
+-- the loader's async-thread callbacks can be lost: only the game-thread timers are allowed
+function ExecuteWithDelay()error('ExecuteWithDelay: use ExecuteInGameThreadWithDelay',2)end
+function ExecuteInGameThread()error('ExecuteInGameThread: use ExecuteInGameThreadWithDelay',2)end
+function ExecuteInGameThreadWithDelay(ms,fn)jobs[#jobs+1]={at=time+ms,fn=fn}end
+function LoopInGameThreadWithDelay()end
 function FindAllOf()return windows end
 function StaticFindObject(path)local x=obj(path);x.GetAddress=function()return path end;return x end
 function RegisterHook(path,fn)hooks[path]=fn end
@@ -49,8 +53,18 @@ local function advance(ms)
  time=target
 end
 local function press(mode)keys[mode]();advance(400)end
-dofile((arg[1] or './')..'Scripts/main.lua')
+local function loadMain()dofile((arg[1] or './')..'Scripts/main.lua')end
+for _,missing in ipairs({'ExecuteInGameThreadWithDelay','LoopInGameThreadWithDelay'})do
+ local kept=_G[missing];_G[missing]=nil
+ local ok,err=pcall(loadMain)
+ _G[missing]=kept
+ assert(not ok and tostring(err):find('Palished needs a UE4SS loader with ExecuteInGameThreadWithDelay and LoopInGameThreadWithDelay',1,true),'loading without '..missing)
+ assert(not next(keys) and not next(notifications) and #logs==0,'nothing may load before the loader check')
+end
+loadMain()
 press('single');press('all');assert(count.single==0 and count.all==0,'acted outside menu')
+local ran=0;layoutLater(100,function()ran=ran+1 end);advance(99);assert(ran==0,'later fired early');advance(1);assert(ran==1,'the layout module gets a game-thread timer')
+layoutLater(0,function()error('boom')end);advance(1);assert(logs[#logs]:find('ERROR',1,true) and logs[#logs]:find('boom',1,true));logs[#logs]=nil
 windows={w};for _,fn in pairs(notifications)do fn(w)end;advance(650)
 assert(singleText.text=='Repair [R]' and allText.text=='Repair All [Ctrl+R]','labels')
 for _,fn in pairs(hooks)do fn({get=function()return w end})end;advance(200)

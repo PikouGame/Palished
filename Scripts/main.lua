@@ -1,5 +1,7 @@
 -- PKRepairKeys 1.1 — client only, Palworld 1.0.5.102999 / UE4SS 2281fa31.
 -- Invoke the vanilla UI button handlers. No inventory, durability or cost writes.
+assert(type(ExecuteInGameThreadWithDelay) == "function" and type(LoopInGameThreadWithDelay) == "function",
+    "Palished needs a UE4SS loader with ExecuteInGameThreadWithDelay and LoopInGameThreadWithDelay")
 local UEHelpers = require("UEHelpers")
 local CLASS = "WBP_RepairEquipment_C"
 local PATH = "/Game/Pal/Blueprint/UI/Repair/WBP_RepairEquipment.WBP_RepairEquipment_C"
@@ -14,7 +16,7 @@ local function safe(fn)
     if not ok then log("ERROR " .. tostring(err)) end
 end
 local function later(ms, fn)
-    ExecuteWithDelay(ms, function() ExecuteInGameThread(function() safe(fn) end) end)
+    ExecuteInGameThreadWithDelay(ms, function() safe(fn) end)
 end
 
 -- The repair-all label is not a reflected variable in this game build.

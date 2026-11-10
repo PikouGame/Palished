@@ -79,16 +79,12 @@ local function adopt(hud)
     remove();state.hud=hud;state.error=nil;guarded()
 end
 NotifyOnNewObject(PATH,function(hud)
-    ExecuteWithDelay(500,function()ExecuteInGameThread(function()adopt(hud)end)end)
+    ExecuteInGameThreadWithDelay(500,function()adopt(hud)end)
 end)
 for _,ms in ipairs({2000,10000,30000}) do
-    ExecuteWithDelay(ms,function()ExecuteInGameThread(function()
+    ExecuteInGameThreadWithDelay(ms,function()
         for _,hud in ipairs(FindAllOf(CLASS) or {}) do adopt(hud) end
-    end)end)
+    end)
 end
-local function tick()
-    ExecuteInGameThread(guarded)
-    ExecuteWithDelay(250,tick)
-end
-ExecuteWithDelay(1000,tick)
+LoopInGameThreadWithDelay(250,guarded)
 log("Loaded: equipped-tool durability only; no item/stat writes")

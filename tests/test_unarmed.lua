@@ -32,8 +32,10 @@ local hud=obj('hud',{Icon_Weapon=icon,Text_WeaponName=label,isRiding=false,
     Canvas_WeaponInfo={IsVisible=function()return true end}})
 function hud:GetOwningPlayer()return owner end
 NotifyOnNewObject=function(_,fn)notify=fn end
-ExecuteWithDelay=function(_,fn)jobs[#jobs+1]=fn end
-ExecuteInGameThread=function(fn)fn()end
+-- the loader's async-thread callbacks can be lost: only the game-thread timers are allowed
+ExecuteWithDelay=function()error('ExecuteWithDelay: use ExecuteInGameThreadWithDelay',2)end
+ExecuteInGameThread=function()error('ExecuteInGameThread: use ExecuteInGameThreadWithDelay',2)end
+ExecuteInGameThreadWithDelay=function(_,fn)jobs[#jobs+1]=fn end
 FindAllOf=function()scans=scans+1;return {menu}end
 StaticFindObject=function()return obj('function')end
 RegisterHook=function(_,fn)hook=fn end

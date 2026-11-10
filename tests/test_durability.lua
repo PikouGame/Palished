@@ -138,9 +138,9 @@ end
 
 local function boot()
     nextId=0
-    W={now=0,jobs={},seq=0,gameq={},thread='game',logs={},writes=0,notify={},huds={},allHuds={},menus={},
+    W={now=0,jobs={},seq=0,thread='game',logs={},writes=0,notify={},huds={},allHuds={},menus={},
         constructed={},hooks={},owner=nil,
-        counts={ExecuteWithDelay=0,ExecuteInGameThread=0,ExecuteInGameThreadWithDelay=0,LoopInGameThreadWithDelay=0}}
+        counts={ExecuteInGameThreadWithDelay=0,LoopInGameThreadWithDelay=0}}
     W.owner=new(Widget,'owner');W.invisible=new(Widget,'native invisible')
     local function sched(ms,fn,kind,every)
         assert(isnum(ms) and ms>=0,'bad delay');assert(type(fn)=='function','Ref was not function')
@@ -149,11 +149,9 @@ local function boot()
         W.jobs[#W.jobs+1]=job
         return job
     end
-    function ExecuteWithDelay(ms,fn) W.counts.ExecuteWithDelay=W.counts.ExecuteWithDelay+1;sched(ms,fn,'async') end
-    function ExecuteInGameThread(fn)
-        W.counts.ExecuteInGameThread=W.counts.ExecuteInGameThread+1
-        assert(type(fn)=='function','Ref was not function');W.gameq[#W.gameq+1]=fn
-    end
+    -- the loader runs these callbacks on its own thread, where a lost one cannot be told apart: never used
+    function ExecuteWithDelay() error('ExecuteWithDelay: use ExecuteInGameThreadWithDelay',2) end
+    function ExecuteInGameThread() error('ExecuteInGameThread: use ExecuteInGameThreadWithDelay',2) end
     function ExecuteInGameThreadWithDelay(ms,fn)
         W.counts.ExecuteInGameThreadWithDelay=W.counts.ExecuteInGameThreadWithDelay+1
         return sched(ms,fn,'game')
@@ -164,15 +162,8 @@ local function boot()
     end
     function CancelDelayedAction(h) assert(type(h)=='table' and h.fn,'bad handle');h.live=false end
     function IsInGameThread() return W.thread=='game' end
-    local function drain()
-        while #W.gameq>0 do
-            local f=table.remove(W.gameq,1)
-            local before=W.thread;W.thread='game';f();W.thread=before
-        end
-    end
     function W.advance(ms)
         local target=W.now+ms
-        drain()
         while true do
             local best
             for _,j in ipairs(W.jobs) do
@@ -181,11 +172,9 @@ local function boot()
             if not best then break end
             W.now=best.at
             if best.every then best.at=best.at+best.every;W.seq=W.seq+1;best.seq=W.seq else best.live=false end
-            W.thread=best.kind=='async' and 'async' or 'game'
             local r=best.fn()
-            W.thread='game'
-            if best.every and r==true then best.live=false end
-            drain()
+            -- a loop callback that returns anything (true ends it) is a defect of the mod
+            if best.every then assert(r==nil,'loop callback must return nothing') end
         end
         W.now=target
         local kept={}
@@ -302,6 +291,18 @@ do
     assert(not pk(later),'a new HUD without notification must wait for a scan')
     die(hud);W.advance(30000)
     expectShown(later,40,CYAN,'later scan')
+end
+
+-- 3b. one game-thread loop is started at load (no start delay) and follows the tool every 250 ms
+do
+    boot()
+    assert(W.counts.LoopInGameThreadWithDelay==1,'one loop at load')
+    local hud=newHud();local weapon=newWeapon(80,100);equip(hud,weapon)
+    announce(PATH,hud);W.advance(500)
+    expectShown(hud,80,CYAN,'adopted at 500 ms')
+    weapon.ownWeaponDynamicData.cur=20;W.advance(250)
+    expectShown(hud,20,ORANGE,'the loop is running 250 ms later, not after a 1000 ms start delay')
+    assert(W.counts.LoopInGameThreadWithDelay==1,'the loop is never re-armed')
 end
 
 -- 4. class default objects, archetypes and non-transient objects are never adopted

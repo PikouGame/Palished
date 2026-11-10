@@ -113,6 +113,9 @@ local function load()
         return {table.unpack(windows)}
     end
     function print(...) logs[#logs+1]=table.concat({...},'\t') end
+    -- the loader's async-thread callbacks can be lost: the module only gets `later`
+    function ExecuteWithDelay() error('ExecuteWithDelay: use ExecuteInGameThreadWithDelay',2) end
+    function ExecuteInGameThread() error('ExecuteInGameThread: use ExecuteInGameThreadWithDelay',2) end
     local function later(ms,fn)
         assert(isnum(ms) and type(fn)=='function','Ref was not function')
         jobs[#jobs+1]={at=now+ms,fn=fn,seq=#jobs}
