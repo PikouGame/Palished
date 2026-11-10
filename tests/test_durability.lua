@@ -5,7 +5,7 @@ package.path=root..'Scripts/?.lua;'..package.path
 local realprint=print
 local PATH='/Game/Pal/Blueprint/UI/UserInterface/InGame/PlayerGauge/WBP_Ingame_PlayerGauge_Separated.WBP_Ingame_PlayerGauge_Separated_C'
 local MENU='/Game/Pal/Blueprint/UI/UserInterface/InGame/PlayerGauge/WBP_Ingame_WeaponChange.WBP_Ingame_WeaponChange_C'
-local CYAN,ORANGE,RED={R=0.35,G=0.85,B=1,A=1},{R=1,G=0.55,B=0.08,A=1},{R=1,G=0.12,B=0.08,A=1}
+local CYAN,RED={R=0.35,G=0.85,B=1,A=1},{R=1,G=0.12,B=0.08,A=1}
 
 local W,nextId
 local function onGame() assert(W.thread=='game','UObject used off the game thread') end
@@ -308,7 +308,7 @@ do
     announce(PATH,hud);W.advance(500)
     expectShown(hud,80,CYAN,'adopted at 500 ms')
     weapon.ownWeaponDynamicData.cur=20;W.advance(250)
-    expectShown(hud,20,ORANGE,'the loop is running 250 ms later, not after a 1000 ms start delay')
+    expectShown(hud,20,CYAN,'the loop is running 250 ms later, not after a 1000 ms start delay')
     assert(W.counts.LoopInGameThreadWithDelay==1,'the loop is never re-armed')
 end
 
@@ -367,8 +367,9 @@ end
 do
     local cases={
         {100,100,1,100,CYAN,'full'},{50,100,0.5,50,CYAN,'half'},
-        {30,100,0.30,30,CYAN,'exactly 0.30 is not low'},{2999,10000,0.2999,30,ORANGE,'just under 0.30'},
-        {10,100,0.10,10,ORANGE,'exactly 0.10 is not critical'},{999,10000,0.0999,10,RED,'just under 0.10'},
+        {25,100,0.25,25,CYAN,'between 0.20 and 0.30 there is no middle colour'},
+        {20,100,0.20,20,CYAN,'exactly 0.20 is not low'},{1999,10000,0.1999,20,RED,'just under 0.20'},
+        {10,100,0.10,10,RED,'low'},
         {0,100,0,0,RED,'empty'},{150,100,1,100,CYAN,'above the maximum is clamped'},
         {-5,100,0,0,RED,'negative is clamped'}}
     local hud,weapon=start(100,100)
@@ -387,7 +388,7 @@ do
     -- the text follows the percentage when it changes and comes back after a hide
     local h,w=start(100,100)
     for _,v in ipairs({50,49,49,100,1}) do
-        w.ownWeaponDynamicData.cur=v;W.advance(300);expectShown(h,v,v<10 and RED or v<30 and ORANGE or CYAN,'text '..v)
+        w.ownWeaponDynamicData.cur=v;W.advance(300);expectShown(h,v,v<20 and RED or CYAN,'text '..v)
     end
 end
 
@@ -474,7 +475,7 @@ for _,firstAlive in ipairs({true,false}) do
     assert(hud2.Icon_Weapon.Brush.ResourceObject~=W.invisible and hud2.Icon_Weapon.visibility==3)
     menu.CachedSelectedWeaponListWidget=new(Widget,'weapon row');W.advance(300)
     hud2.Icon_Weapon.visibility=0;W.advance(300) -- the native HUD shows its own icon again
-    expectShown(hud2,25,ORANGE,'second HUD')
+    expectShown(hud2,25,CYAN,'second HUD')
     assert(#W.constructed==4 and count(W.logs,'Widgets created inside weapon tile')==2)
     if not firstAlive then -- a destroyed HUD is never adopted again
         announce(PATH,hud1);W.advance(31000)
@@ -535,11 +536,10 @@ do
     W.advance(250);drawn(hud,80,0.8,CYAN,'good reading after a bad one');quiet('after a bad reading')
     W.huds={};local second=newHud();equip(second,weapon);announce(PATH,second);W.advance(700)
     drawn(second,80,0.8,CYAN,'new HUD, same reading as the old one');quiet('new HUD')
-    -- the bar follows a ratio that moves inside one rounded percent; the colour follows 0.30 and 0.10 exactly
+    -- the bar follows a ratio that moves inside one rounded percent; the colour follows 0.20 exactly
     local h,w=start(5000,10000);local d=w.ownWeaponDynamicData
-    for _,c in ipairs({{5004,50,0.5004,CYAN},{4996,50,0.4996,CYAN},{3004,30,0.3004,CYAN},{3000,30,0.30,CYAN},
-        {2999,30,0.2999,ORANGE},{3000,30,0.30,CYAN},{1004,10,0.1004,ORANGE},{1000,10,0.10,ORANGE},
-        {999,10,0.0999,RED},{1000,10,0.10,ORANGE},{3,0,0.0003,RED},{0,0,0,RED}}) do
+    for _,c in ipairs({{5004,50,0.5004,CYAN},{4996,50,0.4996,CYAN},{2004,20,0.2004,CYAN},{2000,20,0.20,CYAN},
+        {1999,20,0.1999,RED},{2000,20,0.20,CYAN},{3,0,0.0003,RED},{0,0,0,RED}}) do
         d.cur=c[1];W.advance(250);drawn(h,c[2],c[3],c[4],'ratio '..c[3]);quiet('ratio '..c[3])
     end
 end
@@ -554,7 +554,7 @@ do
     weapon.ownWeaponDynamicData.cur=20;W.advance(5000)
     hud.isRiding=true;W.advance(500);hud.isRiding=false;W.advance(500)
     assert(W.libraryCalls==1,'library fetched again: '..W.libraryCalls)
-    expectShown(hud,20,ORANGE,'drawn with the kept library')
+    expectShown(hud,20,CYAN,'drawn with the kept library')
 end
 
 print=realprint

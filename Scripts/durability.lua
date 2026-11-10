@@ -3,10 +3,10 @@ local helpers = require("UEHelpers")
 local unarmed = require("unarmed")
 local CLASS = "WBP_Ingame_PlayerGauge_Separated_C"
 local PATH = "/Game/Pal/Blueprint/UI/UserInterface/InGame/PlayerGauge/WBP_Ingame_PlayerGauge_Separated.WBP_Ingame_PlayerGauge_Separated_C"
-local COLORS = {{R=1,G=0.12,B=0.08,A=1},{R=1,G=0.55,B=0.08,A=1},{R=0.35,G=0.85,B=1,A=1}}
--- ratio, band and last are what the widgets show, nil when that is not known (after a hide, a remove or an error);
+local RED, BLUE = {R=1,G=0.12,B=0.08,A=1}, {R=0.35,G=0.85,B=1,A=1}
+-- ratio, color and last are what the widgets show, nil when that is not known (after a hide, a remove or an error);
 -- shown is false while hidden, nil before the first write.
-local state = {hud=nil, bar=nil, text=nil, last=nil, ratio=nil, band=nil, shown=nil, error=nil}
+local state = {hud=nil, bar=nil, text=nil, last=nil, ratio=nil, color=nil, shown=nil, error=nil}
 local system -- the Kismet system library lives as long as the game: UEHelpers is asked once, the first time it is needed
 local function valid(x) return x and x:IsValid() end
 local function log(s) print("[Palished] "..tostring(s).."\n") end
@@ -16,13 +16,13 @@ local function hide()
         if valid(state.bar) then state.bar:SetVisibility(1) end
         if valid(state.text) then state.text:SetVisibility(1) end
     end
-    state.shown=false;state.ratio=nil;state.band=nil;state.last=nil
+    state.shown=false;state.ratio=nil;state.color=nil;state.last=nil
 end
 local function remove()
     unarmed.clear()
     if valid(state.bar) then state.bar:RemoveFromParent() end
     if valid(state.text) then state.text:RemoveFromParent() end
-    state.bar=nil;state.text=nil;state.last=nil;state.ratio=nil;state.band=nil;state.shown=nil
+    state.bar=nil;state.text=nil;state.last=nil;state.ratio=nil;state.color=nil;state.shown=nil
 end
 local function create(hud)
     remove()
@@ -63,12 +63,12 @@ local function update()
     if maximum<=0 or current~=current or maximum~=maximum then hide();return end
     local ratio=math.max(0,math.min(1,current/maximum))
     local percent=math.floor(ratio*100+0.5)
-    local band=ratio<0.10 and 1 or ratio<0.30 and 2 or 3
+    local color=ratio<0.20 and RED or BLUE -- red under 20 %, as the game's own item gauge
     if state.ratio~=ratio then state.bar:SetPercent(ratio);state.ratio=ratio end
-    if state.band~=band then
-        state.bar:SetFillColorAndOpacity(COLORS[band])
-        state.text:SetColorAndOpacity({SpecifiedColor=COLORS[band],ColorUseRule=0})
-        state.band=band
+    if state.color~=color then
+        state.bar:SetFillColorAndOpacity(color)
+        state.text:SetColorAndOpacity({SpecifiedColor=color,ColorUseRule=0})
+        state.color=color
     end
     if state.last~=percent then
         state.text:SetText(helpers.GetKismetTextLibrary():Conv_StringToText(tostring(percent).." %"))

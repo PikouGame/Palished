@@ -17,7 +17,7 @@ _Native UI renders: original layout → Palished. Both columns and the accessory
 ## Durability at a glance
 
 A compact bar and percentage show your equipped tool or weapon's condition.
-Orange below 30%; red below 10%. Empty hands get Palworld's native fist icon
+Red below 20%, like the game's own gauge. Empty hands get Palworld's native fist icon
 and localized **Unarmed** label.
 
 ![Equipped pickaxe with its durability display](https://raw.githubusercontent.com/PikouGame/Palished/0c203e5ae75115b087b299ce46325f69514f741e/assets/showcase/palished-durability.png)

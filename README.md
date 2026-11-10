@@ -6,7 +6,7 @@ Small UI improvements for a smoother day in Palworld.
 - **Ctrl+R** opens the normal **Repair All** confirmation.
 - Repair buttons show their keyboard shortcuts while preserving the game's current language.
 - The main weapon tile shows Palworld's own fist and localized Unarmed name when you select your bare hands.
-- A compact bar and percentage show the equipped tool's durability in the weapon HUD. Blue normally, orange below 30%, red below 10%.
+- A compact bar and percentage show the equipped tool's durability in the weapon HUD. Blue normally, red below 20%, like the game's own item gauge.
 - Accessory and Food slots align with Weapon, with consistent spacing between the three equipment sections.
 - The right equipment column has evenly spaced groups, with Sphere Module's bottom aligned to the last accessory row.
 

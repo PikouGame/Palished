@@ -4,7 +4,7 @@ Small details. Smoother everyday play.
 Keep an eye on your equipped tool’s durability, repair with a keypress, and enjoy tidier equipment slots that fit Palworld’s existing interface.
 
 The little improvements
-• A compact durability bar and percentage for your equipped tool or weapon. Orange below 30%, red below 10%.
+• A compact durability bar and percentage for your equipped tool or weapon. Red below 20%, like the game's own gauge.
 • R repairs the selected item at a repair bench; Ctrl+R opens the normal Repair All confirmation. The buttons show the shortcuts in your current language.
 • Tidier equipment columns: aligned slots, consistent section spacing, and Sphere Module level with the last accessory row. Native styling, slot sizes and controls are preserved.
 • Empty hands get the game's native fist icon and localized Unarmed label.
