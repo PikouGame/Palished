@@ -90,6 +90,12 @@ w.visible=false;press('single');assert(count.single==1,'hidden menu');w.visible=
 w.valid=false;press('all');assert(count.all==3,'destroyed menu');refused('single');refused('all')
 w.valid=true;for _,fn in pairs(hooks)do fn({get=function()return w end})end;advance(200)
 keys.single();advance(35);keys.all();advance(400);assert(count.single==2 and count.all==3,'cooldown')
+-- the 30 ms merge window and the 300 ms cooldown, to the millisecond
+local s0,a0=count.single,count.all
+keys.single();advance(29);assert(count.single==s0,'R dispatched before the 30 ms merge window closed');advance(1);assert(count.single==s0+1,'R not dispatched 30 ms after the press')
+advance(290);keys.single();advance(400);assert(count.single==s0+1,'a press 290 ms after a dispatch is inside the cooldown')
+keys.single();advance(30);advance(310);keys.single();advance(400);assert(count.single==s0+3,'a press 310 ms after a dispatch is outside the cooldown')
+keys.single();advance(20);keys.all();advance(400);assert(count.single==s0+3 and count.all==a0+1,'Ctrl+R 20 ms after R gives one Repair All')
 singleText.text='Réparer';allText.text='Tout réparer'
 for _,fn in pairs(hooks)do fn({get=function()return w end})end;advance(200)
 assert(singleText.text=='Réparer [R]' and allText.text=='Tout réparer [Ctrl+R]','localization lost')
