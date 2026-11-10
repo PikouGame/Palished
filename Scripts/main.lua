@@ -9,6 +9,7 @@ local SINGLE = "BndEvt__WBP_RepairEquipment_WBP_IngameMenu_Repair_K2Node_Compone
 local ALL = "BndEvt__WBP_RepairEquipment_WBP_IngameMenu_Repair_K2Node_ComponentBoundEvent_3_OnClickedRepairAllButton__DelegateSignature"
 local hooked = {}
 local pending, cooldown = nil, false
+local known -- the last repair window announced by the creation notice, the hook or the load pass
 local function log(s) print("[PKRepairKeys] " .. tostring(s) .. "\n") end
 local function valid(o) return o and o:IsValid() end
 local function safe(fn)
@@ -42,6 +43,9 @@ local function suffix(label, hint)
         log("Label: " .. text)
     end
 end
+local function know(window)
+    if valid(window) and not window:HasAnyFlags(0x10) then known = window end
+end
 local function labelWindow(window)
     if not valid(window) or window:HasAnyFlags(0x10) then return end -- class default object
     local panel = window.WBP_IngameMenu_Repair
@@ -62,6 +66,7 @@ local function installHooks()
             if not hooked[id] then
                 RegisterHook(path, function(context)
                     local window = context:get()
+                    know(window)
                     later(100, function() labelWindow(window) end)
                 end)
                 hooked[id] = true
@@ -70,13 +75,14 @@ local function installHooks()
     end
 end
 NotifyOnNewObject(PATH, function(window)
+    know(window)
     later(100, function() installHooks(); labelWindow(window) end)
     later(600, function() labelWindow(window) end)
 end)
 -- A mod loaded in the middle of a game finds the windows that already exist.
 later(0, function()
     installHooks()
-    for _, window in ipairs(FindAllOf(CLASS) or {}) do labelWindow(window) end
+    for _, window in ipairs(FindAllOf(CLASS) or {}) do know(window) labelWindow(window) end
 end)
 
 local function activeWindow()
@@ -107,6 +113,7 @@ local function dispatch(mode)
     log(mode == "all" and "Ctrl+R: vanilla Repair All confirmation opened" or "R: vanilla selected-item repair requested")
 end
 local function queue(mode)
+    if not valid(known) then return end -- no repair window was ever announced, or it is gone
     if cooldown then return end
     -- Some input handlers deliver both R and Ctrl+R. Merge them, with Ctrl priority.
     if pending then
