@@ -46,7 +46,7 @@ Unofficial Palworld mod, not affiliated with Pocketpair. All rights reserved; do
 ## Build
 
 ```sh
-lua tests/test_repair_keys.lua ./
+lua tests/test_repair.lua ./
 lua tests/test_durability.lua ./
 lua tests/test_unarmed.lua ./
 lua tests/test_equipment_layout.lua ./

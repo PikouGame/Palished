@@ -233,7 +233,7 @@ local function boot(existing)
 end
 
 -- helpers on the Palished widgets of one HUD
-local function pk(hud)
+local function ours(hud)
     local bar,label
     for _,c in ipairs(hud.Canvas_WeaponInfo.children) do
         if c.name=='PalishedDurabilityBar' then assert(not bar,'bar twice');bar=c end
@@ -244,11 +244,11 @@ end
 local function same(a,b) for k,v in pairs(b) do assert(a[k]==v,k..' differs') end end
 local function hidden(w) return not w:IsVisible() end
 local function expectHidden(hud,why)
-    local bar,label=pk(hud)
+    local bar,label=ours(hud)
     assert(bar and label and hidden(bar) and hidden(label),'must be hidden: '..why)
 end
 local function expectShown(hud,percent,col,why)
-    local bar,label=pk(hud)
+    local bar,label=ours(hud)
     assert(bar and label,'widgets missing: '..why)
     assert(bar.visibility==3 and label.visibility==3,'must be shown: '..why)
     assert(label.text==string.format('%d %%',percent),why..': text '..tostring(label.text))
@@ -292,12 +292,12 @@ do
     local hud
     boot(function() hud=newHud();equip(hud,newWeapon(50,100)) end)
     W.advance(999)
-    assert(not pk(hud),'adopted before the load pass ran, a second after load')
+    assert(not ours(hud),'adopted before the load pass ran, a second after load')
     W.advance(1)
     expectShown(hud,50,CYAN,'load pass')
     local later=newHud();equip(later,newWeapon(40,100))
     die(hud);W.advance(31000)
-    assert(not pk(later),'a new HUD without notification is never scanned for')
+    assert(not ours(later),'a new HUD without notification is never scanned for')
 end
 
 -- 3b. one game-thread loop is started at load (no start delay) and follows the tool every 250 ms
@@ -321,7 +321,7 @@ do
     for _,h in ipairs({cdo,arch,pkg,dead}) do equip(h,newWeapon(100,100));announce(PATH,h) end
     W.advance(31000)
     assert(#W.constructed==0 and W.writes==0,'adopted something that is not a live HUD')
-    for _,h in ipairs({cdo,arch,pkg}) do assert(not pk(h)) end
+    for _,h in ipairs({cdo,arch,pkg}) do assert(not ours(h)) end
     -- a real HUD arriving afterwards is still adopted
     local hud=newHud();equip(hud,newWeapon(100,100));announce(PATH,hud);W.advance(700)
     expectShown(hud,100,CYAN,'real HUD after the others')
@@ -333,13 +333,13 @@ do
     end)
     W.advance(31000)
     assert(#W.constructed==0 and W.writes==0,'the load pass adopted something that is not a live HUD')
-    for _,h in ipairs({cdo,arch,pkg}) do assert(not pk(h)) end
+    for _,h in ipairs({cdo,arch,pkg}) do assert(not ours(h)) end
 end
 
 -- 5. widgets are created once per HUD, inside Canvas_WeaponInfo, with the icon's geometry
 do
     local hud,weapon=start(100,100)
-    local bar,label=pk(hud)
+    local bar,label=ours(hud)
     assert(bar and label and #W.constructed==2)
     assert(bar.parent==hud.Canvas_WeaponInfo and label.parent==hud.Canvas_WeaponInfo,'not inside Canvas_WeaponInfo')
     assert(W.constructed[1].outer==hud.WidgetTree and W.constructed[2].outer==hud.WidgetTree,'outer is the widget tree')
@@ -356,7 +356,7 @@ do
     assert(count(W.logs,'Widgets created inside weapon tile')==1)
     -- announced again, many ticks: still one pair
     announce(PATH,hud);W.advance(31000)
-    assert(#W.constructed==2 and #hud.Canvas_WeaponInfo.children==4 and pk(hud)==bar,'created twice')
+    assert(#W.constructed==2 and #hud.Canvas_WeaponInfo.children==4 and ours(hud)==bar,'created twice')
     assert(count(W.logs,'Widgets created inside weapon tile')==1)
     -- the native widgets are never moved or removed
     assert(hud.Icon_Weapon.parent==hud.Canvas_WeaponInfo and hud.Icon_Weapon.visibility==0)
@@ -376,13 +376,13 @@ do
         weapon.ownWeaponDynamicData.cur,weapon.ownWeaponDynamicData.max=c[1],c[2]
         W.advance(300)
         expectShown(hud,c[4],c[5],c[6])
-        local bar=pk(hud);assert(math.abs(bar.percent-c[3])<1e-9,c[6]..': bar percent '..bar.percent)
+        local bar=ours(hud);assert(math.abs(bar.percent-c[3])<1e-9,c[6]..': bar percent '..bar.percent)
     end
     -- each of them as the first reading of a fresh HUD too
     for _,c in ipairs(cases) do
         local h,w=start(c[1],c[2])
         expectShown(h,c[4],c[5],'first reading, '..c[6])
-        assert(math.abs(pk(h).percent-c[3])<1e-9)
+        assert(math.abs(ours(h).percent-c[3])<1e-9)
     end
     -- the text follows the percentage when it changes and comes back after a hide
     local h,w=start(100,100)
@@ -458,16 +458,16 @@ for _,firstAlive in ipairs({true,false}) do
     local hud1=start(80,100)
     local menu,source=newMenu();announce(MENU,menu);W.advance(700)
     menu.CachedSelectedWeaponListWidget=source;W.advance(300)
-    local bar1,label1=pk(hud1);assert(bar1 and label1 and hud1.Icon_Weapon.visibility==3)
+    local bar1,label1=ours(hud1);assert(bar1 and label1 and hud1.Icon_Weapon.visibility==3)
     if not firstAlive then die(hud1) else W.huds={} end
     local hud2=newHud();equip(hud2,newWeapon(25,100))
     announce(PATH,hud2);W.advance(700)
-    local bar2,label2=pk(hud2)
+    local bar2,label2=ours(hud2)
     assert(bar2 and label2 and bar2~=bar1 and label2~=label1,'second HUD shares widgets')
     assert(bar1.parent==nil and label1.parent==nil and (bar1.removed or 0)>=1 and (label1.removed or 0)>=1,'first widgets not removed')
     assert(#hud2.Canvas_WeaponInfo.children==4 and bar2.parent==hud2.Canvas_WeaponInfo)
     if firstAlive then
-        assert(not pk(hud1) and #hud1.Canvas_WeaponInfo.children==2,'first HUD keeps our widgets')
+        assert(not ours(hud1) and #hud1.Canvas_WeaponInfo.children==2,'first HUD keeps our widgets')
         assert(hud1.Icon_Weapon.visibility==1 and hud1.Text_WeaponName.text=='','first HUD keeps the fist')
     end
     expectHidden(hud2,'bare hands on the second HUD')
@@ -497,7 +497,7 @@ do
     -- a tree that is not ready yet: reported once, nothing half-built, retried until it works
     local late=newHud{};late.WidgetTree.alive=false;equip(late,newWeapon(70,100))
     W.huds={late};announce(PATH,late);W.advance(5000)
-    assert(not pk(late) and count(W.logs,'HUD tree unavailable')==1,'tree error')
+    assert(not ours(late) and count(W.logs,'HUD tree unavailable')==1,'tree error')
     late.WidgetTree.alive=true;W.advance(300)
     expectShown(late,70,CYAN,'tree ready')
 end
@@ -509,12 +509,12 @@ do
         W.advance(2000);assert(W.writes==before,why..': '..(W.writes-before)..' writes in 8 unchanged ticks')
     end
     local function drawn(hud,percent,ratio,col,why)
-        expectShown(hud,percent,col,why);assert(math.abs(pk(hud).percent-ratio)<1e-9,why..': bar percent '..pk(hud).percent)
+        expectShown(hud,percent,col,why);assert(math.abs(ours(hud).percent-ratio)<1e-9,why..': bar percent '..ours(hud).percent)
     end
     local hud,weapon=start(80,100)
     quiet('tool in hand')
     hud.isRiding=true;W.advance(250);expectHidden(hud,'riding');quiet('mounted')
-    do local bar,label=pk(hud);bar.percent=0;bar.fill=nil;label.text='';label.textColor=nil end
+    do local bar,label=ours(hud);bar.percent=0;bar.fill=nil;label.text='';label.textColor=nil end
     hud.isRiding=false;W.advance(250);drawn(hud,80,0.8,CYAN,'dismounted');quiet('after the mount')
     hud.Canvas_WeaponInfo.visibility=2;W.advance(250);expectHidden(hud,'canvas hidden');quiet('canvas hidden')
     hud.Canvas_WeaponInfo.visibility=0;W.advance(250);drawn(hud,80,0.8,CYAN,'canvas back');quiet('canvas back')
@@ -525,7 +525,7 @@ do
     hud.Icon_Weapon.visibility=0;W.advance(250);drawn(hud,80,0.8,CYAN,'weapon back');quiet('weapon back')
     -- the same reading is drawn again after an error, hidden by a bad reading, or on a new HUD;
     -- whatever happened to the widgets while hidden is not trusted
-    local function forgotten() local bar,label=pk(hud);bar.percent=0;bar.fill=nil;label.text='';label.textColor=nil end
+    local function forgotten() local bar,label=ours(hud);bar.percent=0;bar.fill=nil;label.text='';label.textColor=nil end
     local dyn=weapon.ownWeaponDynamicData
     function dyn:GetDurability() error('engine says no',0) end
     W.advance(250);expectHidden(hud,'error');forgotten()
