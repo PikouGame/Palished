@@ -13,11 +13,11 @@ Getting started
 Client only. Requires a compatible UE4SS Experimental loader for Palworld; no server installation is needed.
 
 1. Close Palworld.
-2. Copy PKRepairKeys into your existing UE4SS Mods folder.
+2. Copy Palished into your existing UE4SS Mods folder.
 3. If UE4SS uses Ctrl+R for hot reload, set HotReloadEnabled = 0 in UE4SS-settings.ini.
 4. Restart the game.
 
-Already using PKRepairKeys? Replace that folder. It’s Palished’s internal folder name. See INSTALL.txt for full instructions.
+Updating? See INSTALL.txt.
 
 A small note
 Repair costs and confirmation stay vanilla. Tested on Palworld 1.0.5.102999 with UE4SS 2281fa31 through Proton/Wine. Other game versions and UI mods may need adjustments.

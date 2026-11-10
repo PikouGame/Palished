@@ -16,15 +16,15 @@ Repair shortcuts only act in the repair-bench menu. Disabled buttons remain disa
 
 **Client only.** Requires a compatible [UE4SS Experimental (Palworld)](https://www.nexusmods.com/palworld/mods/2237) installation; no server mod is required. UE4SS is not bundled.
 
-1. Close Palworld. Extract the `PKRepairKeys` folder into your existing UE4SS `Mods` folder, usually `Pal/Binaries/Win64/ue4ss/Mods/`.
+1. Close Palworld. Extract the `Palished` folder into your existing UE4SS `Mods` folder, usually `Pal/Binaries/Win64/ue4ss/Mods/`.
 2. Use the loader you already have. For a Workshop-installed UE4SS loader, its mod folder may instead be `Mods/NativeMods/UE4SS/Mods/`.
-3. Keep the included `enabled.txt`. If your loader uses an explicit mods list, enable `PKRepairKeys` there without replacing the other entries.
+3. Keep the included `enabled.txt`. If your loader uses an explicit mods list, enable `Palished` there without replacing the other entries.
 4. In your existing `UE4SS-settings.ini`, set `HotReloadEnabled = 0` if hot reload uses Ctrl+R. Otherwise that loader shortcut conflicts with Repair All.
 5. Restart Palworld. Open a repair bench to use R or Ctrl+R; equip a tool to see its durability.
 
-**Already using PKRepairKeys?** Replace that existing folder. It is the same mod, now called Palished; do not install a second copy. The internal folder name is retained for compatibility.
+**Updating?** See `INSTALL.txt`.
 
-Remove only the `PKRepairKeys` folder and its loader-list entry while the game is closed. No direct save or item edits are performed.
+Remove only the `Palished` folder and its loader-list entry while the game is closed. No direct save or item edits are performed.
 
 ## Version and testing
 

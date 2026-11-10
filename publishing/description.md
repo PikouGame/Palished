@@ -33,12 +33,11 @@ localized labels. Repair costs stay unchanged.
 **Client only.** Requires a compatible [Palworld UE4SS loader](https://www.nexusmods.com/palworld/mods/2237).
 
 1. Close Palworld.
-2. Copy `PKRepairKeys` into your existing UE4SS `Mods` folder.
+2. Copy `Palished` into your existing UE4SS `Mods` folder.
 3. If UE4SS uses Ctrl+R for hot reload, set `HotReloadEnabled = 0` in `UE4SS-settings.ini`.
 4. Restart the game.
 
-Already using PKRepairKeys? Replace that folder—it's Palished's internal name.
-See `INSTALL.txt` for details. Tested on Palworld 1.0.5.102999 with UE4SS 2281fa31
+Updating? See `INSTALL.txt`. Tested on Palworld 1.0.5.102999 with UE4SS 2281fa31
 through Proton/Wine; other versions and UI mods may need adjustments.
 
 ## Share your experience

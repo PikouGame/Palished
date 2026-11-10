@@ -7,20 +7,21 @@ The unarmed HUD uses the native fist and localized name, without durability/ammo
 Equipment slot alignment follows the native Weapon and Head groups.
 
 CLIENT ONLY. Compatible UE4SS for Palworld is required, not bundled.
-Close Palworld; extract PKRepairKeys into your existing UE4SS Mods directory.
-Keep enabled.txt. If using a mods list, enable PKRepairKeys without replacing
+Close Palworld; extract Palished into your existing UE4SS Mods directory.
+Keep enabled.txt. If using a mods list, enable Palished without replacing
 other entries. Do not install duplicate UE4SS loaders or duplicate mod copies.
-Manual loader path: Pal/Binaries/Win64/ue4ss/Mods/PKRepairKeys
-Workshop loader path: Mods/NativeMods/UE4SS/Mods/PKRepairKeys
+Manual loader path: Pal/Binaries/Win64/ue4ss/Mods/Palished
+Workshop loader path: Mods/NativeMods/UE4SS/Mods/Palished
 Disable UE4SS hot reload (HotReloadEnabled = 0 in UE4SS-settings.ini) if it is
 bound to Ctrl+R. Restart Palworld after installing. No server install needed.
-Existing PKRepairKeys users: replace that folder; Palished is its public name.
+Upgrading from 1.1.2 or earlier: delete the old PKRepairKeys folder and its
+line in the loader's mods list first.
 
 Tested: Palworld1.0.5.102999, UE4SS2281fa31, Windows executable via Wine/Proton.
 R, Ctrl+R and durability display confirmed by the author. Other versions,
 native Windows OS, controller bindings and HUD-mod conflicts remain unverified.
 
-Uninstall: close the game; remove only PKRepairKeys and its loader-list entry.
+Uninstall: close the game; remove only Palished and its loader-list entry.
 No direct inventory, durability, costs or save edits are performed.
 
 We’d love to hear how Palished feels! Share your experience, leave a comment,
