@@ -1,4 +1,4 @@
-Palished 1.2.0-alpha — UI enhancements for Palworld
+Palished 1.2.0-beta — UI enhancements for Palworld
 
 R: selected-item repair. Ctrl+R: normal Repair All confirmation.
 Only active at a repair bench; normal costs and disabled-button rules apply.

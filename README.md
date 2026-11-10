@@ -28,7 +28,7 @@ Remove only the `Palished` folder and its loader-list entry while the game is cl
 
 ## Version and testing
 
-Current release: **1.2.0-alpha**. In game on this release, the author confirmed R and Ctrl+R at the repair bench, and the session's log and captures show the key hints, the durability display and the equipment alignment at work. The unarmed HUD was last confirmed in game on 1.1.2.
+Current release: **1.2.0-beta**. In game on this release, the author confirmed R and Ctrl+R at the repair bench, and the session's log and captures show the key hints, the durability display and the equipment alignment at work. The unarmed HUD was last confirmed in game on 1.1.2.
 Tested on Palworld **1.0.5.102999**, UE4SS Palworld fork **2281fa31**, running Windows executables through Wine/Proton. Automated checks cover menu/disabled-button guards, native repair routes, Ctrl priority, cooldown, localized button hints, the durability HUD, the unarmed icon and the equipment layout.
 
 Not verified across other game/loader versions, native Windows OS installations, controller bindings, or other HUD mods. UI names may change in future game updates. The durability HUD is for the equipped tool/weapon, not every inventory item.
