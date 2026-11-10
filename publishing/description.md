@@ -48,6 +48,6 @@ so we can investigate and improve Palished together.
 
 [Source and compatibility notes](https://github.com/PikouGame/Palished)
 
-_Made with OpenAI Codex under lelorax's direction. Screenshots are captured in game.
+_Made with OpenAI Codex and Claude under lelorax's direction. Screenshots are captured in game.
 Free to use; all rights reserved. Reuploads, published modifications and reuse
 require permission. Unofficial Palworld mod._
