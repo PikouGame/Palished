@@ -76,12 +76,11 @@ NotifyOnNewObject(PATH, function(window)
     later(100, function() installHooks(); labelWindow(window) end)
     later(600, function() labelWindow(window) end)
 end)
-for _, delay in ipairs({2000, 10000, 30000}) do
-    later(delay, function()
-        installHooks()
-        for _, window in ipairs(FindAllOf(CLASS) or {}) do labelWindow(window) end
-    end)
-end
+-- A mod loaded in the middle of a game finds the windows that already exist.
+later(0, function()
+    installHooks()
+    for _, window in ipairs(FindAllOf(CLASS) or {}) do labelWindow(window) end
+end)
 
 local function activeWindow()
     for _, window in ipairs(FindAllOf(CLASS) or {}) do

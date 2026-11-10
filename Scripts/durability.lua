@@ -81,10 +81,9 @@ end
 NotifyOnNewObject(PATH,function(hud)
     ExecuteInGameThreadWithDelay(500,function()adopt(hud)end)
 end)
-for _,ms in ipairs({2000,10000,30000}) do
-    ExecuteInGameThreadWithDelay(ms,function()
-        for _,hud in ipairs(FindAllOf(CLASS) or {}) do adopt(hud) end
-    end)
-end
+-- A mod loaded in the middle of a game finds the HUD that already exists.
+ExecuteInGameThreadWithDelay(0,function()
+    for _,hud in ipairs(FindAllOf(CLASS) or {}) do adopt(hud) end
+end)
 LoopInGameThreadWithDelay(250,guarded)
 log("Loaded: equipped-tool durability only; no item/stat writes")

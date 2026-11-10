@@ -64,8 +64,8 @@ NotifyOnNewObject(path,function(candidate)
         adopt(candidate);installHook()
     end)
 end)
--- Late-load fallback only. The durability module already owns the HUD timer.
-ExecuteInGameThreadWithDelay(2000,function()
+-- A mod loaded in the middle of a game finds the menu that already exists.
+ExecuteInGameThreadWithDelay(0,function()
     installHook()
     for _,candidate in ipairs(FindAllOf('WBP_Ingame_WeaponChange_C') or {}) do adopt(candidate) end
 end)

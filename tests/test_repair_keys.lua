@@ -84,5 +84,20 @@ keys.single();advance(35);keys.all();advance(400);assert(count.single==2 and cou
 singleText.text='Réparer';allText.text='Tout réparer'
 for _,fn in pairs(hooks)do fn({get=function()return w end})end;advance(200)
 assert(singleText.text=='Réparer [R]' and allText.text=='Tout réparer [Ctrl+R]','localization lost')
+-- a mod loaded while a repair window already exists: one pass at load, no notice needed, no later scan
+local function reload()
+ singleText.text='Repair';allText.text='Repair All'
+ jobs,hooks,notifications,keys={},{},{},{}
+ loadMain()
+end
+w.cdo=true;windows={w};reload();advance(0)
+assert(singleText.text=='Repair' and allText.text=='Repair All','a class default object was labeled at load')
+w.cdo=false;windows={w};reload()
+assert(singleText.text=='Repair' and not next(hooks),'nothing may happen before the load pass runs')
+advance(0)
+assert(singleText.text=='Repair [R]' and allText.text=='Repair All [Ctrl+R]' and next(hooks),'existing window not adopted at load')
+singleText.text='Repair';allText.text='Repair All';advance(40000)
+assert(singleText.text=='Repair' and allText.text=='Repair All','the load pass must not repeat')
+local was=count.single;press('single');assert(count.single==was+1,'R works after a reload '..was..' '..count.single)
 for _,line in ipairs(logs)do assert(not line:find('ERROR',1,true),line)end
 oldprint('PASS: menu-only actions; hidden/inactive/destroyed guards; disabled hit testing; no repair during pending repair; native single/all routes; Ctrl priority both orders; cooldown; localized idempotent labels.')

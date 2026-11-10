@@ -136,7 +136,8 @@ local function newMenu()
     return menu,source,fist
 end
 
-local function boot()
+-- `existing` builds the widgets that are already in the game when the mod loads; without it the game is empty at load
+local function boot(existing)
     nextId=0
     W={now=0,jobs={},seq=0,thread='game',logs={},writes=0,notify={},huds={},allHuds={},menus={},
         constructed={},hooks={},owner=nil,
@@ -220,8 +221,10 @@ local function boot()
             assert(type(s)=='string','string expected');return text(s) end} end}
     package.loaded.durability=nil;package.loaded.unarmed=nil;package.loaded.UEHelpers=nil
     package.preload.UEHelpers=function() return helpers end
+    if existing then existing() end
     assert(require('durability')==true,'the HUD module exposes nothing (no stop switch, no state)')
     W.unarmed=require('unarmed')
+    if not existing then W.advance(0) end -- the load pass finds an empty game
     return W
 end
 
@@ -280,17 +283,16 @@ do
     expectShown(hud,100,CYAN,'announced')
 end
 
--- 3. a HUD that already exists is adopted by the late-load scan, and a HUD appearing later by the next scans
+-- 3. a HUD that already exists when the mod loads is adopted by the single load pass, and only then
 do
-    boot()
-    local hud=newHud();equip(hud,newWeapon(50,100))
-    W.advance(2100)
-    expectShown(hud,50,CYAN,'late-load scan')
+    local hud
+    boot(function() hud=newHud();equip(hud,newWeapon(50,100)) end)
+    assert(not pk(hud),'adopted before the load pass ran')
+    W.advance(0)
+    expectShown(hud,50,CYAN,'load pass')
     local later=newHud();equip(later,newWeapon(40,100))
-    W.advance(1000)
-    assert(not pk(later),'a new HUD without notification must wait for a scan')
-    die(hud);W.advance(30000)
-    expectShown(later,40,CYAN,'later scan')
+    die(hud);W.advance(31000)
+    assert(not pk(later),'a new HUD without notification is never scanned for')
 end
 
 -- 3b. one game-thread loop is started at load (no start delay) and follows the tool every 250 ms
@@ -318,6 +320,15 @@ do
     -- a real HUD arriving afterwards is still adopted
     local hud=newHud();equip(hud,newWeapon(100,100));announce(PATH,hud);W.advance(700)
     expectShown(hud,100,CYAN,'real HUD after the others')
+    -- the same objects already existing at load are refused by the load pass too
+    boot(function()
+        cdo=newHud{flags=0x10};arch=newHud{flags=0x20}
+        pkg=newHud{fullName='/Game/Pal/Blueprint/UI/Default__WBP_Ingame_PlayerGauge_Separated_C'}
+        for _,h in ipairs({cdo,arch,pkg}) do equip(h,newWeapon(100,100)) end
+    end)
+    W.advance(31000)
+    assert(#W.constructed==0 and W.writes==0,'the load pass adopted something that is not a live HUD')
+    for _,h in ipairs({cdo,arch,pkg}) do assert(not pk(h)) end
 end
 
 -- 5. widgets are created once per HUD, inside Canvas_WeaponInfo, with the icon's geometry
@@ -338,7 +349,7 @@ do
     assert(label.justification==2)
     same(label.shadow,{R=0,G=0,B=0,A=1});same(label.shadowOffset,{X=1,Y=1})
     assert(count(W.logs,'Widgets created inside weapon tile')==1)
-    -- announced again, scanned at 2000, 10000 and 30000, many ticks: still one pair
+    -- announced again, many ticks: still one pair
     announce(PATH,hud);W.advance(31000)
     assert(#W.constructed==2 and #hud.Canvas_WeaponInfo.children==4 and pk(hud)==bar,'created twice')
     assert(count(W.logs,'Widgets created inside weapon tile')==1)

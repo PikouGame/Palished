@@ -102,7 +102,8 @@ local function build(o)
     return win,parts
 end
 
-local function load()
+-- `existing` fills the windows that are already in the game when the mod loads; without it the game is empty at load
+local function load(existing)
     writes,logs,jobs,notify,now={},{},{},{},0
     local windows={}
     local env={windows=windows}
@@ -129,12 +130,14 @@ local function load()
         end
         now=target
     end
+    if existing then existing(windows) end
     dofile(root..'Scripts/equipment_layout.lua')(later)
     -- NotifyOnNewObject receives the class path
     env.announce=function(win) local fn
         for p,f in pairs(notify) do assert(p:find('WBP_InventoryEquipment_C',1,true));fn=f end
         fn(win)
     end
+    if not existing then env.advance(0) end -- the load pass finds an empty game
     return env
 end
 
@@ -196,21 +199,31 @@ for _,A in ipairs({0,0.5}) do
         assert(w.fn=='SetPadding' or w.fn=='SetAnchors' or w.fn=='SetPosition',w.fn)
         assert(w.slot~='section Weapon_00' and w.slot~='section Head' and w.slot~='cases Weapon_00')
     end
-    -- the second pass (600 ms) and the late scan (2000 ms) change nothing and print nothing
+    -- the second pass (600 ms) and the later seconds change nothing and print nothing
     local nw,nl=#writes,#logs
     env.advance(3000)
     assert(#writes==nw and #logs==nl,'second pass wrote or logged')
 end
 
--- 2. a window that already exists is found by the late-load scan; nothing before it
+-- 2. a window that already exists at load is found by the one load pass; nothing before it
 do
     local win,p=build{}
-    local env=load()
-    env.windows[1]=win;env.advance(1900)
+    local env=load(function(w) w[1]=win end)
     expectQuiet()
-    env.advance(200)
+    env.advance(0)
     expectTop(p.Accessory_01.section.Slot,393.98999,0,'Accessory');expectLog(FULL)
-    local nw=#writes;env.advance(10000);assert(#writes==nw and #logs==1)
+    local nw=#writes;env.advance(40000);assert(#writes==nw and #logs==1)
+    -- a window made later without a creation notice is not looked for
+    local late,q=build{}
+    env.windows[2]=late;env.advance(40000)
+    assert(q.Food_00.section.Slot.anchors.Minimum.Y==1,'a later scan found a window')
+end
+
+-- 2b. a class default object existing at load is refused by the load pass
+do
+    local env=load(function(w) w[1]=build{flags=0x10} end)
+    env.advance(0);env.advance(40000)
+    expectQuiet()
 end
 
 -- 3. the layout is prepared before sizes are read

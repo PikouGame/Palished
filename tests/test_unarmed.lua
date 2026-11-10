@@ -1,5 +1,6 @@
 local root=assert(arg[1],'pass mod root with trailing slash')
-local notify,jobs,scans,hook=nil,{},0,nil
+local notify,jobs,scans,hook,found=nil,{},0,nil,nil
+local delays={}
 local function obj(id,t)
     t=t or {};t.alive=true
     function t:IsValid()return self.alive end
@@ -35,17 +36,23 @@ NotifyOnNewObject=function(_,fn)notify=fn end
 -- the loader's async-thread callbacks can be lost: only the game-thread timers are allowed
 ExecuteWithDelay=function()error('ExecuteWithDelay: use ExecuteInGameThreadWithDelay',2)end
 ExecuteInGameThread=function()error('ExecuteInGameThread: use ExecuteInGameThreadWithDelay',2)end
-ExecuteInGameThreadWithDelay=function(_,fn)jobs[#jobs+1]=fn end
-FindAllOf=function()scans=scans+1;return {menu}end
+ExecuteInGameThreadWithDelay=function(ms,fn)jobs[#jobs+1]=fn;delays[#jobs]=ms end
+FindAllOf=function()scans=scans+1;return found end
 StaticFindObject=function()return obj('function')end
 RegisterHook=function(_,fn)hook=fn end
+-- a menu that exists when the mod loads, and a class default object beside it
+local cdo=obj('default menu',{})
+function cdo:HasAnyFlags()return true end
+function cdo:GetOwningPlayer()return owner end
+found={menu,cdo}
 local U=dofile(root..'Scripts/unarmed.lua')
 assert(not U.update(hud),'absent selector must not be mistaken for unarmed')
+assert(#jobs==1 and delays[1]==0 and scans==0,'one load pass at once, nothing scanned before it runs')
 jobs[1]()
 assert(U.update(hud) and icon.Brush.ResourceObject==fist and label.value=='Mains nues')
-local before=writes
+local before,passes=writes,scans
 for i=1,20 do assert(U.update(hud)) end
-assert(writes==before and scans==1,'no repeated paints or steady object scans')
+assert(writes==before and scans==passes and #jobs==1,'no repeated paints, scans or timers')
 -- The native HUD may clear its empty tile again; repaint only then.
 icon.Brush.ResourceObject=invisible;label.value=''
 assert(U.update(hud) and label.value=='Mains nues')
