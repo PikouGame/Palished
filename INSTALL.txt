@@ -12,8 +12,9 @@ Keep enabled.txt. If using a mods list, enable Palished without replacing
 other entries. Do not install duplicate UE4SS loaders or duplicate mod copies.
 Manual loader path: Pal/Binaries/Win64/ue4ss/Mods/Palished
 Workshop loader path: Mods/NativeMods/UE4SS/Mods/Palished
-Disable UE4SS hot reload (HotReloadEnabled = 0 in UE4SS-settings.ini) if it is
-bound to Ctrl+R. Restart Palworld after installing. No server install needed.
+UE4SS hot reload uses Ctrl+R by default. Set EnableHotReloadSystem = 0 in
+UE4SS-settings.ini, or change HotReloadKey. Restart Palworld after installing.
+No server install needed.
 Upgrading from 1.1.2 or earlier: delete the old PKRepairKeys folder and its
 line in the loader's mods list first.
 

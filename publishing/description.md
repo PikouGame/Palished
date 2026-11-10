@@ -34,7 +34,7 @@ localized labels. Repair costs stay unchanged.
 
 1. Close Palworld.
 2. Copy `Palished` into your existing UE4SS `Mods` folder.
-3. If UE4SS uses Ctrl+R for hot reload, set `HotReloadEnabled = 0` in `UE4SS-settings.ini`.
+3. UE4SS hot reload uses Ctrl+R by default. Set `EnableHotReloadSystem = 0` in `UE4SS-settings.ini`, or change `HotReloadKey`.
 4. Restart the game.
 
 Updating? See `INSTALL.txt`. Tested on Palworld 1.0.5.102999 with UE4SS 2281fa31

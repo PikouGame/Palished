@@ -19,7 +19,7 @@ Repair shortcuts only act in the repair-bench menu. Disabled buttons remain disa
 1. Close Palworld. Extract the `Palished` folder into your existing UE4SS `Mods` folder, usually `Pal/Binaries/Win64/ue4ss/Mods/`.
 2. Use the loader you already have. For a Workshop-installed UE4SS loader, its mod folder may instead be `Mods/NativeMods/UE4SS/Mods/`.
 3. Keep the included `enabled.txt`. If your loader uses an explicit mods list, enable `Palished` there without replacing the other entries.
-4. In your existing `UE4SS-settings.ini`, set `HotReloadEnabled = 0` if hot reload uses Ctrl+R. Otherwise that loader shortcut conflicts with Repair All.
+4. UE4SS hot reload uses Ctrl+R by default, which conflicts with Repair All. In your existing `UE4SS-settings.ini`, set `EnableHotReloadSystem = 0`, or change `HotReloadKey`.
 5. Restart Palworld. Open a repair bench to use R or Ctrl+R; equip a tool to see its durability.
 
 **Updating?** See `INSTALL.txt`.
