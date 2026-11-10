@@ -28,8 +28,8 @@ Remove only the `Palished` folder and its loader-list entry while the game is cl
 
 ## Version and testing
 
-Current release: **1.1.2-alpha**. Equipment alignment in both columns and the unarmed HUD were confirmed in game. The description includes native before/after renders of the complete layout.
-Tested on Palworld **1.0.5.102999**, UE4SS Palworld fork **2281fa31**, running Windows executables through Wine/Proton. The author confirmed R, Ctrl+R and the durability display in game. Automated checks cover menu/disabled-button guards, native repair routes, Ctrl priority, cooldown, and localized button hints.
+Current release: **1.1.2-alpha**. Equipment alignment in both columns and the unarmed HUD were confirmed in game.
+Tested on Palworld **1.0.5.102999**, UE4SS Palworld fork **2281fa31**, running Windows executables through Wine/Proton. The author confirmed R, Ctrl+R and the durability display in game. Automated checks cover menu/disabled-button guards, native repair routes, Ctrl priority, cooldown, localized button hints, the durability HUD, the unarmed icon and the equipment layout.
 
 Not verified across other game/loader versions, native Windows OS installations, controller bindings, or other HUD mods. UI names may change in future game updates. The durability HUD is for the equipped tool/weapon, not every inventory item.
 
@@ -47,6 +47,9 @@ Unofficial Palworld mod, not affiliated with Pocketpair. All rights reserved; do
 
 ```sh
 lua tests/test_repair_keys.lua ./
+lua tests/test_durability.lua ./
+lua tests/test_unarmed.lua ./
+lua tests/test_equipment_layout.lua ./
 python3 tools/package.py
 ```
 

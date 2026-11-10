@@ -7,6 +7,6 @@ The mod's folder is now Palished: delete the old PKRepairKeys folder and its lin
 Align Accessory and Food slots with Weapon, keep section spacing consistent, and align the bottom of Sphere Module with the last accessory row.
 Show Palworld’s native fist icon and localized Unarmed label in the main HUD when using bare hands. Weapon icons and durability return when you equip a weapon.
 R / Ctrl+R repairs, normal repair costs and the Repair All confirmation remain unchanged. Client only; requires UE4SS.
-Replace your existing folder; do not install a second copy. No developer replay shortcuts are included.
+Replace your existing folder; do not install a second copy.
 
 We’d love to hear which details make a difference for you! Leave a comment, share your experience, or report a bug so we can investigate and improve Palished together: https://github.com/PikouGame/Palished/issues

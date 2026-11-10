@@ -21,7 +21,7 @@ No server install needed.
 Upgrading from 1.1.2 or earlier: delete the old PKRepairKeys folder and its
 line in the loader's mods list first.
 
-Tested: Palworld1.0.5.102999, UE4SS2281fa31, Windows executable via Wine/Proton.
+Tested: Palworld 1.0.5.102999, UE4SS 2281fa31, Windows executable via Wine/Proton.
 R, Ctrl+R and durability display confirmed by the author. Other versions,
 native Windows OS, controller bindings and HUD-mod conflicts remain unverified.
 
@@ -33,5 +33,5 @@ or report bugs so we can investigate and improve it:
 https://github.com/PikouGame/Palished/issues
 Include game/UE4SS versions and reproduction steps; remove personal log data.
 
-Author: PikouGame. AI-generated code/documentation directed and tested by the
+Author: lelorax. AI-generated code/documentation directed and tested by the
 author. All rights reserved; see LICENSE.txt. No game or loader files bundled.
