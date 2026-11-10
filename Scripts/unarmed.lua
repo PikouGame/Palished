@@ -22,9 +22,9 @@ function U.clear()
     painted=nil
 end
 function U.update(hud)
-    local source=valid(menu) and menu.NonWeaponWidget
+    -- A selected weapon actor answers first and cheapest: only then are the rows compared.
+    local source=valid(menu) and not valid(menu.LastSelectedWeaponActor) and menu.NonWeaponWidget
     local selected=valid(source) and same(menu.CachedSelectedWeaponListWidget,source)
-        and not valid(menu.LastSelectedWeaponActor)
     if not selected or hud.isRiding or not hud.Canvas_WeaponInfo:IsVisible()
         or not same(menu:GetOwningPlayer(),hud:GetOwningPlayer()) then
         U.clear();return false

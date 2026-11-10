@@ -63,9 +63,21 @@ hud.isRiding=true
 assert(not U.update(hud) and not icon.visible,'riding cannot show the fist')
 hud.isRiding=false;assert(U.update(hud))
 -- A native real-weapon update must never be erased during cleanup.
-menu.LastSelectedWeaponActor=weapon;menu.CachedSelectedWeaponListWidget=obj('weapon row')
+local weaponRow=obj('weapon row')
+menu.LastSelectedWeaponActor=weapon;menu.CachedSelectedWeaponListWidget=weaponRow
 icon.Brush.ResourceObject=weapon;icon.visible=true;label.value='Pickaxe'
 assert(not U.update(hud) and icon.Brush.ResourceObject==weapon and icon.visible and label.value=='Pickaxe')
+-- A selected weapon actor settles it before the two rows are even read.
+do
+    local rows,reads={NonWeaponWidget=source,CachedSelectedWeaponListWidget=menu.CachedSelectedWeaponListWidget},{}
+    menu.NonWeaponWidget=nil;menu.CachedSelectedWeaponListWidget=nil
+    setmetatable(menu,{__index=function(_,k) if rows[k] then reads[k]=true end return rows[k] end})
+    assert(not U.update(hud) and not next(reads),'rows read although a weapon actor is selected')
+    -- even when that weapon row is the unarmed one, a weapon actor refuses the fist
+    rows.CachedSelectedWeaponListWidget=source
+    assert(not U.update(hud) and not next(reads) and icon.Brush.ResourceObject==weapon and label.value=='Pickaxe')
+    setmetatable(menu,nil);menu.NonWeaponWidget=rows.NonWeaponWidget;menu.CachedSelectedWeaponListWidget=weaponRow
+end
 menu.LastSelectedWeaponActor=nil
 assert(not U.update(hud),'missing weapon without native unarmed selection is not enough')
 menu.CachedSelectedWeaponListWidget=source
@@ -73,6 +85,14 @@ hud.GetOwningPlayer=function()return obj('other local player')end
 assert(not U.update(hud),'never borrow another player\'s weapon selection')
 hud.GetOwningPlayer=function()return owner end
 assert(U.update(hud))
+-- Without the native fist texture or its localized name there is nothing to show.
+source.Icon_Weapon.Brush.ResourceObject=nil
+assert(not U.update(hud) and not icon.visible and label.value=='','missing fist texture')
+source.Icon_Weapon.Brush.ResourceObject=fist;assert(U.update(hud))
+local nativeName=source.Text_WeaponName.GetText
+source.Text_WeaponName.GetText=function()return text('')end
+assert(not U.update(hud) and not icon.visible and label.value=='','missing fist name')
+source.Text_WeaponName.GetText=nativeName;assert(U.update(hud))
 menu.alive=false;assert(not U.update(hud) and label.value=='')
 menu.alive=true;notify(menu);jobs[#jobs]();assert(U.update(hud))
 -- The live native selector is authoritative even if a different widget was
