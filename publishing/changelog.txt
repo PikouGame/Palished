@@ -1,4 +1,4 @@
-Next version (draft)
+1.2.0-alpha — lighter and sturdier under the hood
 
 The mod's folder is now Palished: delete the old PKRepairKeys folder and its line in the loader's mods list before installing.
 Timers now use the loader's game-thread functions instead of the async ones, which could drop a callback and leave R, Ctrl+R or the durability bar stuck until restart. The loader must provide ExecuteInGameThreadWithDelay and LoopInGameThreadWithDelay.
