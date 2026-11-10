@@ -2,7 +2,7 @@ Next version (draft)
 
 The mod's folder is now Palished: delete the old PKRepairKeys folder and its line in the loader's mods list before installing.
 Timers now run on the game thread, so a lost callback no longer leaves R, Ctrl+R or the durability bar stuck until restart. The loader must provide ExecuteInGameThreadWithDelay and LoopInGameThreadWithDelay.
-R and Ctrl+R are lighter: they do nothing until a repair window has been announced.
+R and Ctrl+R are lighter: while no repair window exists, pressing them does nothing at all.
 The hot-reload note is corrected: UE4SS hot reload uses Ctrl+R by default, so set EnableHotReloadSystem = 0 in UE4SS-settings.ini, or change HotReloadKey.
 
 We’d love to hear which details make a difference for you! Leave a comment, share your experience, or report a bug so we can investigate and improve Palished together: https://github.com/PikouGame/Palished/issues
