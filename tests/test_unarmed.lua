@@ -47,7 +47,7 @@ function cdo:GetOwningPlayer()return owner end
 found={menu,cdo}
 local U=dofile(root..'Scripts/unarmed.lua')
 assert(not U.update(hud),'absent selector must not be mistaken for unarmed')
-assert(#jobs==1 and delays[1]==0 and scans==0,'one load pass at once, nothing scanned before it runs')
+assert(#jobs==1 and delays[1]==1000 and scans==0,'one load pass a second after load, nothing scanned before it runs')
 jobs[1]()
 assert(U.update(hud) and icon.Brush.ResourceObject==fist and label.value=='Mains nues')
 local before,passes=writes,scans

@@ -64,8 +64,8 @@ NotifyOnNewObject(path,function(candidate)
         adopt(candidate);installHook()
     end)
 end)
--- A mod loaded in the middle of a game finds the menu that already exists.
-ExecuteInGameThreadWithDelay(0,function()
+-- A mod loaded in the middle of a game finds the menu that already exists (one second after load: see main.lua).
+ExecuteInGameThreadWithDelay(1000,function()
     installHook()
     for _,candidate in ipairs(FindAllOf('WBP_Ingame_WeaponChange_C') or {}) do adopt(candidate) end
 end)

@@ -228,7 +228,7 @@ local function boot(existing)
     if existing then existing() end
     assert(require('durability')==true,'the HUD module exposes nothing (no stop switch, no state)')
     W.unarmed=require('unarmed')
-    if not existing then W.advance(0) end -- the load pass finds an empty game
+    if not existing then W.advance(1000) end -- the load pass finds an empty game
     return W
 end
 
@@ -291,8 +291,9 @@ end
 do
     local hud
     boot(function() hud=newHud();equip(hud,newWeapon(50,100)) end)
-    assert(not pk(hud),'adopted before the load pass ran')
-    W.advance(0)
+    W.advance(999)
+    assert(not pk(hud),'adopted before the load pass ran, a second after load')
+    W.advance(1)
     expectShown(hud,50,CYAN,'load pass')
     local later=newHud();equip(later,newWeapon(40,100))
     die(hud);W.advance(31000)

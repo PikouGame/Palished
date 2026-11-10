@@ -95,8 +95,8 @@ end
 NotifyOnNewObject(PATH,function(hud)
     ExecuteInGameThreadWithDelay(500,function()adopt(hud)end)
 end)
--- A mod loaded in the middle of a game finds the HUD that already exists.
-ExecuteInGameThreadWithDelay(0,function()
+-- A mod loaded in the middle of a game finds the HUD that already exists (one second after load: see main.lua).
+ExecuteInGameThreadWithDelay(1000,function()
     for _,hud in ipairs(FindAllOf(CLASS) or {}) do adopt(hud) end
 end)
 LoopInGameThreadWithDelay(250,guarded)

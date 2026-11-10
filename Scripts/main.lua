@@ -76,7 +76,8 @@ NotifyOnNewObject(PATH, function(window)
     later(600, function() labelWindow(window) end)
 end)
 -- A mod loaded in the middle of a game finds the windows that already exist.
-later(0, function()
+-- One second after load, so that nothing of ours runs on the game thread while the scripts are still loading.
+later(1000, function()
     installHooks()
     for _, window in ipairs(FindAllOf(CLASS) or {}) do seen = true labelWindow(window) end
 end)

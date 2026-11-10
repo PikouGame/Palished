@@ -103,11 +103,11 @@ local function reload()
  jobs,hooks,notifications,keys={},{},{},{}
  loadMain()
 end
-w.cdo=true;windows={w};reload();advance(0);press('single');refused('single');refused('all')
+w.cdo=true;windows={w};reload();advance(1000);press('single');refused('single');refused('all')
 assert(singleText.text=='Repair' and allText.text=='Repair All','a class default object was labeled at load')
-w.cdo=false;windows={w};reload()
-assert(singleText.text=='Repair' and not next(hooks),'nothing may happen before the load pass runs')
-advance(0)
+w.cdo=false;windows={w};reload();advance(999)
+assert(singleText.text=='Repair' and not next(hooks),'nothing may happen before the load pass runs, a second after load')
+advance(1)
 assert(singleText.text=='Repair [R]' and allText.text=='Repair All [Ctrl+R]' and next(hooks),'existing window not adopted at load')
 singleText.text='Repair';allText.text='Repair All';advance(40000)
 assert(singleText.text=='Repair' and allText.text=='Repair All','the load pass must not repeat')
@@ -129,7 +129,7 @@ local function makeWindow()
  return x
 end
 local function both(x)local s,a=count.single,count.all;press('single');press('all');return count.single==s+1 and count.all==a+1 and x.hits.single==1 and x.hits.all==1 end
-windows={};reload();advance(0);refused('single');refused('all')
+windows={};reload();advance(1000);refused('single');refused('all')
 local w2=makeWindow();windows={w2};notifications[PATH](w2);assert(both(w2),'a window announced by the creation notice')
 w2.valid=false;windows={};press('single');assert(w2.hits.single==1,'a dead window was used');refused('single');refused('all')
 local w3=makeWindow();windows={w3};notifications[PATH](w3);assert(both(w3),'a new window after the old one died: creation notice')
@@ -142,7 +142,7 @@ idle.valid=false;windows={live};press('single');press('all')
 assert(live.hits.single==2 and live.hits.all==2,'the last announced window died: the older living one still answers')
 -- the Repair All label is found at any depth of that button's own tree, and no search is made for text blocks
 local deep=allText;for i=1,20 do local p=obj('panel'..i);p.children={deep};deep=p end
-all.WidgetTree.RootWidget.children={deep};singleText.text='Repair';allText.text='Repair All';windows={w};reload();advance(0)
+all.WidgetTree.RootWidget.children={deep};singleText.text='Repair';allText.text='Repair All';windows={w};reload();advance(1000)
 assert(allText.text=='Repair All [Ctrl+R]','label in a deep tree')
 for _,c in ipairs(searched)do assert(c=='WBP_RepairEquipment_C','global search for '..tostring(c))end
 for _,line in ipairs(logs)do assert(not line:find('ERROR',1,true),line)end

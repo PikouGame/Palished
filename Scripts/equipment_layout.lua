@@ -105,8 +105,8 @@ return function(later)
         later(100, function() align(window) end)
         later(600, function() align(window) end)
     end)
-    -- A mod loaded in the middle of a game finds the screen that already exists.
-    later(0, function()
+    -- A mod loaded in the middle of a game finds the screen that already exists (one second after load: see main.lua).
+    later(1000, function()
         for _, window in ipairs(FindAllOf(CLASS) or {}) do align(window) end
     end)
 end

@@ -137,7 +137,7 @@ local function load(existing)
         for p,f in pairs(notify) do assert(p:find('WBP_InventoryEquipment_C',1,true));fn=f end
         fn(win)
     end
-    if not existing then env.advance(0) end -- the load pass finds an empty game
+    if not existing then env.advance(1000) end -- the load pass finds an empty game
     return env
 end
 
@@ -209,8 +209,9 @@ end
 do
     local win,p=build{}
     local env=load(function(w) w[1]=win end)
+    env.advance(999)
     expectQuiet()
-    env.advance(0)
+    env.advance(1)
     expectTop(p.Accessory_01.section.Slot,393.98999,0,'Accessory');expectLog(FULL)
     local nw=#writes;env.advance(40000);assert(#writes==nw and #logs==1)
     -- a window made later without a creation notice is not looked for
@@ -222,7 +223,7 @@ end
 -- 2b. a class default object existing at load is refused by the load pass
 do
     local env=load(function(w) w[1]=build{flags=0x10} end)
-    env.advance(0);env.advance(40000)
+    env.advance(1000);env.advance(40000)
     expectQuiet()
 end
 
