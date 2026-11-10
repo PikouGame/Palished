@@ -22,7 +22,7 @@ local single,all=obj('single'),obj('all')
 single.Text_Main=singleText;single.WBP_PalInvisibleButton=obj('hit')
 all.WBP_PalInvisibleButton=obj('hit');all.WidgetTree=obj('tree');all.WidgetTree.RootWidget=obj('root');all.WidgetTree.RootWidget.children={allText}
 all.WBP_PalInvisibleButton.visibility=4 -- observed native Repair All default
-local w=obj('repair');w.active=true;w.CanAllRepair=true;w.Overlay_Repairing=obj('overlay');w.Overlay_Repairing.visible=false
+local w=obj('repair');w.GetFullName=function()error('GetFullName: nothing may read the window name')end;w.active=true;w.CanAllRepair=true;w.Overlay_Repairing=obj('overlay');w.Overlay_Repairing.visible=false
 w.WBP_IngameMenu_Repair=obj('panel');w.WBP_IngameMenu_Repair.WBP_IngameMenu_RepairButton=single;w.WBP_IngameMenu_Repair.WBP_IngameMenu_RepairAllButton=all
 w.BndEvt__WBP_RepairEquipment_WBP_IngameMenu_Repair_K2Node_ComponentBoundEvent_2_OnClickedRepairButton__DelegateSignature=function()count.single=count.single+1 end
 w.BndEvt__WBP_RepairEquipment_WBP_IngameMenu_Repair_K2Node_ComponentBoundEvent_3_OnClickedRepairAllButton__DelegateSignature=function()count.all=count.all+1 end
@@ -67,8 +67,11 @@ local ran=0;layoutLater(100,function()ran=ran+1 end);advance(99);assert(ran==0,'
 layoutLater(0,function()error('boom')end);advance(1);assert(logs[#logs]:find('ERROR',1,true) and logs[#logs]:find('boom',1,true));logs[#logs]=nil
 windows={w};for _,fn in pairs(notifications)do fn(w)end;advance(650)
 assert(singleText.text=='Repair [R]' and allText.text=='Repair All [Ctrl+R]','labels')
+local function labelLogs(text)local n=0;for _,l in ipairs(logs)do if l:find('Label: '..text..'\n',1,true)then n=n+1 end end;return n end
+assert(labelLogs('Repair [R]')==1 and labelLogs('Repair All [Ctrl+R]')==1,'one line per real SetText, with the new text')
 for _,fn in pairs(hooks)do fn({get=function()return w end})end;advance(200)
 assert(singleText.text=='Repair [R]' and allText.text=='Repair All [Ctrl+R]','duplicate suffix')
+assert(labelLogs('Repair [R]')==1 and labelLogs('Repair All [Ctrl+R]')==1,'no line when nothing was set')
 press('single');assert(count.single==1 and count.all==0,'R route')
 press('all');assert(count.single==1 and count.all==1,'Ctrl route')
 keys.single();keys.all();advance(400);assert(count.single==1 and count.all==2,'double dispatch R then Ctrl')
@@ -84,6 +87,12 @@ keys.single();advance(35);keys.all();advance(400);assert(count.single==2 and cou
 singleText.text='Réparer';allText.text='Tout réparer'
 for _,fn in pairs(hooks)do fn({get=function()return w end})end;advance(200)
 assert(singleText.text=='Réparer [R]' and allText.text=='Tout réparer [Ctrl+R]','localization lost')
+-- a label that is empty or still the design-time placeholder is not suffixed
+for _,placeholder in ipairs({'','TEXT'})do
+ singleText.text=placeholder;allText.text=placeholder;local before=#logs
+ for _,fn in pairs(hooks)do fn({get=function()return w end})end;advance(200)
+ assert(singleText.text==placeholder and allText.text==placeholder and #logs==before,'placeholder label suffixed: "'..placeholder..'"')
+end
 -- a mod loaded while a repair window already exists: one pass at load, no notice needed, no later scan
 local function reload()
  singleText.text='Repair';allText.text='Repair All'

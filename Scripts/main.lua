@@ -7,7 +7,7 @@ local CLASS = "WBP_RepairEquipment_C"
 local PATH = "/Game/Pal/Blueprint/UI/Repair/WBP_RepairEquipment.WBP_RepairEquipment_C"
 local SINGLE = "BndEvt__WBP_RepairEquipment_WBP_IngameMenu_Repair_K2Node_ComponentBoundEvent_2_OnClickedRepairButton__DelegateSignature"
 local ALL = "BndEvt__WBP_RepairEquipment_WBP_IngameMenu_Repair_K2Node_ComponentBoundEvent_3_OnClickedRepairAllButton__DelegateSignature"
-local hooked, labeled = {}, {}
+local hooked = {}
 local pending, cooldown = nil, false
 local function log(s) print("[PKRepairKeys] " .. tostring(s) .. "\n") end
 local function valid(o) return o and o:IsValid() end
@@ -35,11 +35,12 @@ local function suffix(label, hint)
     assert(valid(label), "Repair label unavailable")
     local text = label:GetText():ToString()
     -- Preserve the currently selected language and avoid appending twice.
-    if text == "" or text == "TEXT" or text == "Text Block" then return false end
+    if text == "" or text == "TEXT" or text == "Text Block" then return end
     if text:sub(-#hint) ~= hint then
-        label:SetText(UEHelpers.GetKismetTextLibrary():Conv_StringToText(text .. hint))
+        text = text .. hint
+        label:SetText(UEHelpers.GetKismetTextLibrary():Conv_StringToText(text))
+        log("Label: " .. text)
     end
-    return label:GetText():ToString():sub(-#hint) == hint
 end
 local function labelWindow(window)
     if not valid(window) or window:HasAnyFlags(0x10) then return end -- class default object
@@ -47,13 +48,8 @@ local function labelWindow(window)
     if not valid(panel) then return end
     local single, all = panel.WBP_IngameMenu_RepairButton, panel.WBP_IngameMenu_RepairAllButton
     if not valid(single) or not valid(all) or not valid(all.WidgetTree) then return end
-    local a = suffix(single.Text_Main, " [R]")
-    local b = suffix(findLabel(all.WidgetTree.RootWidget, "BP_PalTextBlock_C_44", 0), " [Ctrl+R]")
-    local id = window:GetFullName()
-    if a and b and not labeled[id] then
-        labeled[id] = true
-        log("Labels ready: " .. single.Text_Main:GetText():ToString() .. " / Repair All [Ctrl+R]")
-    end
+    suffix(single.Text_Main, " [R]")
+    suffix(findLabel(all.WidgetTree.RootWidget, "BP_PalTextBlock_C_44", 0), " [Ctrl+R]")
 end
 local function installHooks()
     -- Blueprint functions exist only after their package has loaded.
