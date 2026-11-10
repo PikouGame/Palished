@@ -1,4 +1,4 @@
--- Read-only equipped-tool durability, inside the existing weapon HUD tile.
+-- Read-only equipped-tool durability, inside the existing weapon HUD tile; its timer also drives unarmed.update.
 local helpers = require("UEHelpers")
 local unarmed = require("unarmed")
 local CLASS = "WBP_Ingame_PlayerGauge_Separated_C"

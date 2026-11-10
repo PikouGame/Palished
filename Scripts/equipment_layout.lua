@@ -42,34 +42,34 @@ end
 
 local function stack(window, slots)
     local canvas = window.Canvas_EquipmentSlots
-    if not valid(canvas) or not valid(canvas.Slot) then return false end
+    if not valid(canvas) or not valid(canvas.Slot) then return false, false end
     local height, frames = canvas.Slot:GetSize().Y, {}
     window:ForceLayoutPrepass()
     for i, contentSlot in ipairs(slots) do
         frames[i] = frame(contentSlot, height)
-        if not frames[i] then return false end
+        if not frames[i] then return false, false end
     end
-    -- Reuse Accessory -> Food spacing, converting Food's bottom anchor first.
+    -- Reuse the Accessory-to-Food gap (tops are measured independently of anchors).
     local gap = frames[3].top - (frames[2].top + frames[2].height)
-    if gap < 0 then return false end
+    if gap < 0 then return false, false end
     local changed, anchor = false, frames[1].anchor
     for i = 2, #frames do
         local previous, current = frames[i - 1], frames[i]
         changed = place(current, previous.top + previous.height + gap, anchor, height) or changed
     end
 
-    -- Distribute the right column between Head's top and the last Accessory case.
+    -- Distribute the right column between Head's top and the last Accessory case (Modifier is the Sphere Module slot).
     local right, occupied = {}, 0
     for i, name in ipairs({"Head", "Body", "Shield", "Glider", "Modifier"}) do
         local slot = groupSlot(window, "WBP_ItemSlotButton_" .. name)
         right[i] = slot and frame(slot, height)
-        if not right[i] or right[i].contentHeight <= 0 then return changed end
+        if not right[i] or right[i].contentHeight <= 0 then return changed, false end
         occupied = occupied + right[i].contentHeight
     end
-    if frames[2].contentHeight <= 0 then return changed end
+    if frames[2].contentHeight <= 0 then return changed, false end
     local bottom = frames[2].top + frames[2].contentHeight
     local spacing = (bottom - right[1].top - occupied) / (#right - 1)
-    if spacing < 0 then return changed end
+    if spacing < 0 then return changed, false end
     for i = 2, #right do
         local previous = right[i - 1]
         changed = place(right[i], previous.top + previous.contentHeight + spacing,
