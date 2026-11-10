@@ -113,7 +113,7 @@ local function dispatch(mode)
     log(mode == "all" and "Ctrl+R: vanilla Repair All confirmation opened" or "R: vanilla selected-item repair requested")
 end
 local function queue(mode)
-    if not seen then return end -- no repair window exists: R stays the game's own key, at no cost
+    if not seen then return end -- no repair window known: no search, no timer
     if cooldown then return end
     -- Some input handlers deliver both R and Ctrl+R. Merge them, with Ctrl priority.
     if pending then

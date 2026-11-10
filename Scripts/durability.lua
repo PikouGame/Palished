@@ -4,7 +4,8 @@ local unarmed = require("unarmed")
 local CLASS = "WBP_Ingame_PlayerGauge_Separated_C"
 local PATH = "/Game/Pal/Blueprint/UI/UserInterface/InGame/PlayerGauge/WBP_Ingame_PlayerGauge_Separated.WBP_Ingame_PlayerGauge_Separated_C"
 local COLORS = {{R=1,G=0.12,B=0.08,A=1},{R=1,G=0.55,B=0.08,A=1},{R=0.35,G=0.85,B=1,A=1}}
--- ratio, band and last are what the widgets show; shown is false while hidden, nil before the first write.
+-- ratio, band and last are what the widgets show, nil when that is not known (after a hide, a remove or an error);
+-- shown is false while hidden, nil before the first write.
 local state = {hud=nil, bar=nil, text=nil, last=nil, ratio=nil, band=nil, shown=nil, error=nil}
 local system -- the Kismet system library lives as long as the game: UEHelpers is asked once, the first time it is needed
 local function valid(x) return x and x:IsValid() end
