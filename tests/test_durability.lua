@@ -498,5 +498,47 @@ do
     expectShown(late,70,CYAN,'tree ready')
 end
 
+-- 13. a tick in which nothing changed writes nothing, and every way back from hidden writes it all again
+do
+    local function quiet(why)
+        W.advance(250);local before=W.writes
+        W.advance(2000);assert(W.writes==before,why..': '..(W.writes-before)..' writes in 8 unchanged ticks')
+    end
+    local function drawn(hud,percent,ratio,col,why)
+        expectShown(hud,percent,col,why);assert(math.abs(pk(hud).percent-ratio)<1e-9,why..': bar percent '..pk(hud).percent)
+    end
+    local hud,weapon=start(80,100)
+    quiet('tool in hand')
+    hud.isRiding=true;W.advance(250);expectHidden(hud,'riding');quiet('mounted')
+    do local bar,label=pk(hud);bar.percent=0;bar.fill=nil;label.text='';label.textColor=nil end
+    hud.isRiding=false;W.advance(250);drawn(hud,80,0.8,CYAN,'dismounted');quiet('after the mount')
+    hud.Canvas_WeaponInfo.visibility=2;W.advance(250);expectHidden(hud,'canvas hidden');quiet('canvas hidden')
+    hud.Canvas_WeaponInfo.visibility=0;W.advance(250);drawn(hud,80,0.8,CYAN,'canvas back');quiet('canvas back')
+    local menu,source=newMenu();announce(MENU,menu);W.advance(700)
+    quiet('menu known, a weapon is selected')
+    menu.CachedSelectedWeaponListWidget=source;W.advance(250);expectHidden(hud,'bare hands');quiet('bare hands')
+    menu.CachedSelectedWeaponListWidget=new(Widget,'weapon row');W.advance(250)
+    hud.Icon_Weapon.visibility=0;W.advance(250);drawn(hud,80,0.8,CYAN,'weapon back');quiet('weapon back')
+    -- the same reading is drawn again after an error, hidden by a bad reading, or on a new HUD;
+    -- whatever happened to the widgets while hidden is not trusted
+    local function forgotten() local bar,label=pk(hud);bar.percent=0;bar.fill=nil;label.text='';label.textColor=nil end
+    local dyn=weapon.ownWeaponDynamicData
+    function dyn:GetDurability() error('engine says no',0) end
+    W.advance(250);expectHidden(hud,'error');forgotten()
+    function dyn:GetDurability() return self.cur end
+    W.advance(250);drawn(hud,80,0.8,CYAN,'first good tick after the error');quiet('after the error')
+    dyn.max=0;W.advance(250);expectHidden(hud,'bad maximum');forgotten();dyn.max=100
+    W.advance(250);drawn(hud,80,0.8,CYAN,'good reading after a bad one');quiet('after a bad reading')
+    W.huds={};local second=newHud();equip(second,weapon);announce(PATH,second);W.advance(700)
+    drawn(second,80,0.8,CYAN,'new HUD, same reading as the old one');quiet('new HUD')
+    -- the bar follows a ratio that moves inside one rounded percent; the colour follows 0.30 and 0.10 exactly
+    local h,w=start(5000,10000);local d=w.ownWeaponDynamicData
+    for _,c in ipairs({{5004,50,0.5004,CYAN},{4996,50,0.4996,CYAN},{3004,30,0.3004,CYAN},{3000,30,0.30,CYAN},
+        {2999,30,0.2999,ORANGE},{3000,30,0.30,CYAN},{1004,10,0.1004,ORANGE},{1000,10,0.10,ORANGE},
+        {999,10,0.0999,RED},{1000,10,0.10,ORANGE},{3,0,0.0003,RED},{0,0,0,RED}}) do
+        d.cur=c[1];W.advance(250);drawn(h,c[2],c[3],c[4],'ratio '..c[3]);quiet('ratio '..c[3])
+    end
+end
+
 print=realprint
-print('PASS: no work without a HUD; announced and scanned adoption; default objects refused; widgets once per HUD inside Canvas_WeaponInfo; ratios, colours, text and clamping; NaN/zero maximum; riding, hidden tile/icon, invalid weapon/data; unarmed priority; second HUD cleanup; error logged once and recovery.')
+print('PASS: no work without a HUD; announced and scanned adoption; default objects refused; widgets once per HUD inside Canvas_WeaponInfo; ratios, colours, text and clamping; no writes on an unchanged tick, everything redrawn after any hide; NaN/zero maximum; riding, hidden tile/icon, invalid weapon/data; unarmed priority; second HUD cleanup; error logged once and recovery.')
