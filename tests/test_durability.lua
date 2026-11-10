@@ -212,6 +212,7 @@ local function boot(existing)
     function print(...)
         local parts={}
         for i=1,select('#',...) do parts[i]=tostring((select(i,...))) end
+        assert(parts[1] and parts[1]:find('^%[Palished%] '),'log tag: '..tostring(parts[1]))
         W.logs[#W.logs+1]=table.concat(parts,'\t')
     end
     local helpers={
@@ -228,12 +229,12 @@ local function boot(existing)
     return W
 end
 
--- helpers on the PK widgets of one HUD
+-- helpers on the Palished widgets of one HUD
 local function pk(hud)
     local bar,label
     for _,c in ipairs(hud.Canvas_WeaponInfo.children) do
-        if c.name=='PKToolDurabilityBar' then assert(not bar,'bar twice');bar=c end
-        if c.name=='PKToolDurabilityText' then assert(not label,'text twice');label=c end
+        if c.name=='PalishedDurabilityBar' then assert(not bar,'bar twice');bar=c end
+        if c.name=='PalishedDurabilityText' then assert(not label,'text twice');label=c end
     end
     return bar,label
 end

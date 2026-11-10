@@ -43,7 +43,7 @@ function StaticFindObject(path)local x=obj(path);x.GetAddress=function()return p
 function RegisterHook(path,fn)hooks[path]=fn end
 function NotifyOnNewObject(path,fn)notifications[path]=fn end
 local oldprint=print
-function print(s)logs[#logs+1]=s end
+function print(s)assert(tostring(s):find('^%[Palished%] '),'log tag: '..tostring(s));logs[#logs+1]=s end
 local function advance(ms)
  local target=time+ms
  while true do

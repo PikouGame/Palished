@@ -5,7 +5,7 @@ local CLASS = "WBP_Ingame_PlayerGauge_Separated_C"
 local PATH = "/Game/Pal/Blueprint/UI/UserInterface/InGame/PlayerGauge/WBP_Ingame_PlayerGauge_Separated.WBP_Ingame_PlayerGauge_Separated_C"
 local state = {hud=nil, bar=nil, text=nil, last=nil, error=nil}
 local function valid(x) return x and x:IsValid() end
-local function log(s) print("[PKRepairKeys.HUD] "..tostring(s).."\n") end
+local function log(s) print("[Palished] "..tostring(s).."\n") end
 local function hide()
     if valid(state.bar) then state.bar:SetVisibility(1) end
     if valid(state.text) then state.text:SetVisibility(1) end
@@ -21,8 +21,8 @@ local function create(hud)
     assert(valid(hud.WidgetTree) and valid(hud.Canvas_WeaponInfo),"HUD tree unavailable")
     local iconSlot=hud.Icon_Weapon.Slot
     local pos,size,anchors=iconSlot:GetPosition(),iconSlot:GetSize(),iconSlot:GetAnchors()
-    local bar=StaticConstructObject(StaticFindObject("/Script/UMG.ProgressBar"),hud.WidgetTree,FName("PKToolDurabilityBar"))
-    local text=StaticConstructObject(StaticFindObject("/Script/UMG.TextBlock"),hud.WidgetTree,FName("PKToolDurabilityText"))
+    local bar=StaticConstructObject(StaticFindObject("/Script/UMG.ProgressBar"),hud.WidgetTree,FName("PalishedDurabilityBar"))
+    local text=StaticConstructObject(StaticFindObject("/Script/UMG.TextBlock"),hud.WidgetTree,FName("PalishedDurabilityText"))
     assert(valid(bar) and valid(text),"Could not construct durability widgets")
     state.bar=bar;state.text=text
     bar.WidgetStyle=hud.ProgressBar_CoolProgress.WidgetStyle

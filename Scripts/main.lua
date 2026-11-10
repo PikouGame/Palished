@@ -1,5 +1,4 @@
--- PKRepairKeys 1.1 — client only, Palworld 1.0.5.102999 / UE4SS 2281fa31.
--- Invoke the vanilla UI button handlers. No inventory, durability or cost writes.
+-- Palished: client-only interface details for Palworld. Calls the game's own button handlers; never writes inventory, durability, costs or saves.
 assert(type(ExecuteInGameThreadWithDelay) == "function" and type(LoopInGameThreadWithDelay) == "function",
     "Palished needs a UE4SS loader with ExecuteInGameThreadWithDelay and LoopInGameThreadWithDelay")
 local UEHelpers = require("UEHelpers")
@@ -10,7 +9,7 @@ local ALL = "BndEvt__WBP_RepairEquipment_WBP_IngameMenu_Repair_K2Node_ComponentB
 local hooked = {}
 local pending, cooldown = nil, false
 local known -- the last repair window announced by the creation notice, the hook or the load pass
-local function log(s) print("[PKRepairKeys] " .. tostring(s) .. "\n") end
+local function log(s) print("[Palished] " .. tostring(s) .. "\n") end
 local function valid(o) return o and o:IsValid() end
 local function safe(fn)
     local ok, err = pcall(fn)
