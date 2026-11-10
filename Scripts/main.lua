@@ -21,12 +21,12 @@ end
 
 -- The repair-all label is not a reflected variable in this game build.
 -- Walk only that button's small widget tree, never all text objects in the game.
-local function findLabel(node, target, depth)
-    if not valid(node) or depth > 12 then return nil end
+local function findLabel(node, target)
+    if not valid(node) then return nil end
     if node:GetFName():ToString() == target then return node end
     if node:IsA("/Script/UMG.PanelWidget") then
         for i = 0, node:GetChildrenCount() - 1 do
-            local result = findLabel(node:GetChildAt(i), target, depth + 1)
+            local result = findLabel(node:GetChildAt(i), target)
             if result then return result end
         end
     end
@@ -35,7 +35,7 @@ local function suffix(label, hint)
     assert(valid(label), "Repair label unavailable")
     local text = label:GetText():ToString()
     -- Preserve the currently selected language and avoid appending twice.
-    if text == "" or text == "TEXT" or text == "Text Block" then return end
+    if text == "" or text == "TEXT" then return end
     if text:sub(-#hint) ~= hint then
         text = text .. hint
         label:SetText(UEHelpers.GetKismetTextLibrary():Conv_StringToText(text))
@@ -49,7 +49,8 @@ local function labelWindow(window)
     local single, all = panel.WBP_IngameMenu_RepairButton, panel.WBP_IngameMenu_RepairAllButton
     if not valid(single) or not valid(all) or not valid(all.WidgetTree) then return end
     suffix(single.Text_Main, " [R]")
-    suffix(findLabel(all.WidgetTree.RootWidget, "BP_PalTextBlock_C_44", 0), " [Ctrl+R]")
+    -- BP_PalTextBlock_C_44: the label inside the Repair All button's own widget tree.
+    suffix(findLabel(all.WidgetTree.RootWidget, "BP_PalTextBlock_C_44"), " [Ctrl+R]")
 end
 local function installHooks()
     -- Blueprint functions exist only after their package has loaded.

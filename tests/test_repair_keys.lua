@@ -37,7 +37,8 @@ function ExecuteWithDelay()error('ExecuteWithDelay: use ExecuteInGameThreadWithD
 function ExecuteInGameThread()error('ExecuteInGameThread: use ExecuteInGameThreadWithDelay',2)end
 function ExecuteInGameThreadWithDelay(ms,fn)jobs[#jobs+1]={at=time+ms,fn=fn}end
 function LoopInGameThreadWithDelay()end
-function FindAllOf()return windows end
+local searched={}
+function FindAllOf(c)searched[#searched+1]=c;return windows end
 function StaticFindObject(path)local x=obj(path);x.GetAddress=function()return path end;return x end
 function RegisterHook(path,fn)hooks[path]=fn end
 function NotifyOnNewObject(path,fn)notifications[path]=fn end
@@ -108,5 +109,10 @@ assert(singleText.text=='Repair [R]' and allText.text=='Repair All [Ctrl+R]' and
 singleText.text='Repair';allText.text='Repair All';advance(40000)
 assert(singleText.text=='Repair' and allText.text=='Repair All','the load pass must not repeat')
 local was=count.single;press('single');assert(count.single==was+1,'R works after a reload '..was..' '..count.single)
+-- the Repair All label is found at any depth of that button's own tree, and no search is made for text blocks
+local deep=allText;for i=1,20 do local p=obj('panel'..i);p.children={deep};deep=p end
+all.WidgetTree.RootWidget.children={deep};singleText.text='Repair';allText.text='Repair All';windows={w};reload();advance(0)
+assert(allText.text=='Repair All [Ctrl+R]','label in a deep tree')
+for _,c in ipairs(searched)do assert(c=='WBP_RepairEquipment_C','global search for '..tostring(c))end
 for _,line in ipairs(logs)do assert(not line:find('ERROR',1,true),line)end
 oldprint('PASS: menu-only actions; hidden/inactive/destroyed guards; disabled hit testing; no repair during pending repair; native single/all routes; Ctrl priority both orders; cooldown; localized idempotent labels.')
