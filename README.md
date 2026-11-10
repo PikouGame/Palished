@@ -22,7 +22,7 @@ Repair shortcuts only act in the repair-bench menu. Disabled buttons remain disa
 4. UE4SS hot reload uses Ctrl+R by default, which conflicts with Repair All. In your existing `UE4SS-settings.ini`, set `EnableHotReloadSystem = 0`, or change `HotReloadKey`.
 5. Restart Palworld. Open a repair bench to use R or Ctrl+R; equip a tool to see its durability.
 
-**Updating?** See `INSTALL.txt`.
+**Updating from 1.1.2 or earlier?** Delete the old mod folder and its line in the loader's mods list first, so that two copies never run together; see `INSTALL.txt`.
 
 Remove only the `Palished` folder and its loader-list entry while the game is closed. No direct save or item edits are performed.
 

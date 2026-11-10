@@ -37,7 +37,8 @@ localized labels. Repair costs stay unchanged.
 3. UE4SS hot reload uses Ctrl+R by default. Set `EnableHotReloadSystem = 0` in `UE4SS-settings.ini`, or change `HotReloadKey`.
 4. Restart the game.
 
-Updating? See `INSTALL.txt`. Tested on Palworld 1.0.5.102999 with UE4SS 2281fa31
+Updating from 1.1.2 or earlier? Delete the old mod folder and its mods-list line
+first; see `INSTALL.txt`. Tested on Palworld 1.0.5.102999 with UE4SS 2281fa31
 through Proton/Wine; other versions and UI mods may need adjustments.
 
 ## Share your experience
