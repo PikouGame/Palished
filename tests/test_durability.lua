@@ -231,7 +231,7 @@ local function boot()
             assert(type(s)=='string','string expected');return text(s) end} end}
     package.loaded.durability=nil;package.loaded.unarmed=nil;package.loaded.UEHelpers=nil
     package.preload.UEHelpers=function() return helpers end
-    require('durability')
+    assert(require('durability')==true,'the HUD module exposes nothing (no stop switch, no state)')
     W.unarmed=require('unarmed')
     return W
 end

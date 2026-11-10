@@ -1,10 +1,9 @@
 -- Read-only equipped-tool durability, inside the existing weapon HUD tile.
-local preview = (...) == true
 local helpers = require("UEHelpers")
 local unarmed = require("unarmed")
 local CLASS = "WBP_Ingame_PlayerGauge_Separated_C"
 local PATH = "/Game/Pal/Blueprint/UI/UserInterface/InGame/PlayerGauge/WBP_Ingame_PlayerGauge_Separated.WBP_Ingame_PlayerGauge_Separated_C"
-local state = {stopped=false, hud=nil, bar=nil, text=nil, last=nil}
+local state = {hud=nil, bar=nil, text=nil, last=nil, error=nil}
 local function valid(x) return x and x:IsValid() end
 local function log(s) print("[PKRepairKeys.HUD] "..tostring(s).."\n") end
 local function hide()
@@ -17,7 +16,6 @@ local function remove()
     if valid(state.text) then state.text:RemoveFromParent() end
     state.bar=nil;state.text=nil;state.last=nil
 end
-function state.stop() state.stopped=true;remove() end
 local function create(hud)
     remove()
     assert(valid(hud.WidgetTree) and valid(hud.Canvas_WeaponInfo),"HUD tree unavailable")
@@ -75,28 +73,22 @@ local function guarded()
     end
 end
 local function adopt(hud)
-    if state.stopped or not valid(hud) or hud:HasAnyFlags(0x30) then return end
+    if not valid(hud) or hud:HasAnyFlags(0x30) then return end
     if not hud:GetFullName():find("/Engine/Transient.",1,true) then return end
     if valid(state.hud) and state.hud:GetAddress()==hud:GetAddress() then return end
     remove();state.hud=hud;state.error=nil;guarded()
 end
-if not preview then
-    NotifyOnNewObject(PATH,function(hud)
-        ExecuteWithDelay(500,function()ExecuteInGameThread(function()adopt(hud)end)end)
-    end)
-end
+NotifyOnNewObject(PATH,function(hud)
+    ExecuteWithDelay(500,function()ExecuteInGameThread(function()adopt(hud)end)end)
+end)
 for _,ms in ipairs({2000,10000,30000}) do
     ExecuteWithDelay(ms,function()ExecuteInGameThread(function()
-        if not state.stopped then
-            for _,hud in ipairs(FindAllOf(CLASS) or {}) do adopt(hud) end
-        end
+        for _,hud in ipairs(FindAllOf(CLASS) or {}) do adopt(hud) end
     end)end)
 end
 local function tick()
-    if state.stopped then return end
-    ExecuteInGameThread(function()if not state.stopped then guarded() end end)
+    ExecuteInGameThread(guarded)
     ExecuteWithDelay(250,tick)
 end
 ExecuteWithDelay(1000,tick)
 log("Loaded: equipped-tool durability only; no item/stat writes")
-return state
