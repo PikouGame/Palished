@@ -6,8 +6,14 @@ local PATH = "/Game/Pal/Blueprint/UI/UserInterface/InGame/PlayerGauge/WBP_Ingame
 local COLORS = {{R=1,G=0.12,B=0.08,A=1},{R=1,G=0.55,B=0.08,A=1},{R=0.35,G=0.85,B=1,A=1}}
 -- ratio, band and last are what the widgets show; shown is false while hidden, nil before the first write.
 local state = {hud=nil, bar=nil, text=nil, last=nil, ratio=nil, band=nil, shown=nil, error=nil}
+local system
 local function valid(x) return x and x:IsValid() end
 local function log(s) print("[Palished] "..tostring(s).."\n") end
+-- The engine object lives as long as the game: ask UEHelpers once, the first time it is needed.
+local function kismet()
+    system=system or helpers.GetKismetSystemLibrary()
+    return system
+end
 -- Every way of hiding forgets what was written, so the next good tick writes it all again.
 local function hide()
     if state.shown~=false then
@@ -52,7 +58,7 @@ local function update()
     if not valid(state.bar) or not valid(state.text) then create(hud) end
     if unarmed.update(hud) then hide();return end
     if hud.isRiding or not hud.Canvas_WeaponInfo:IsVisible() or not hud.Icon_Weapon:IsVisible() then hide();return end
-    local weapon=helpers.GetKismetSystemLibrary():Conv_SoftObjectReferenceToObject(hud.nowHasWeapon)
+    local weapon=kismet():Conv_SoftObjectReferenceToObject(hud.nowHasWeapon)
     if not valid(weapon) then hide();return end
     local dynamic=weapon.ownWeaponDynamicData
     if not valid(dynamic) then hide();return end

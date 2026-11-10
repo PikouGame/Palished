@@ -215,9 +215,12 @@ local function boot(existing)
         assert(parts[1] and parts[1]:find('^%[Palished%] '),'log tag: '..tostring(parts[1]))
         W.logs[#W.logs+1]=table.concat(parts,'\t')
     end
+    W.library=new(Widget,'KismetSystemLibrary');W.libraryCalls=0
+    function W.library:Conv_SoftObjectReferenceToObject(ref)
+        onGame() alive(self);assert(type(ref)=='table','soft reference expected');return ref.obj
+    end
     local helpers={
-        GetKismetSystemLibrary=function() return {Conv_SoftObjectReferenceToObject=function(_,ref)
-            assert(type(ref)=='table','soft reference expected');return ref.obj end} end,
+        GetKismetSystemLibrary=function() W.libraryCalls=W.libraryCalls+1;return W.library end,
         GetKismetTextLibrary=function() return {Conv_StringToText=function(_,s)
             assert(type(s)=='string','string expected');return text(s) end} end}
     package.loaded.durability=nil;package.loaded.unarmed=nil;package.loaded.UEHelpers=nil
@@ -540,5 +543,18 @@ do
     end
 end
 
+-- 14. the Kismet system library is asked for once, at the first tool tick
+do
+    boot()
+    assert(W.libraryCalls==0,'library fetched at load')
+    local hud=newHud();local weapon=newWeapon(80,100);equip(hud,weapon)
+    announce(PATH,hud);W.advance(700)
+    assert(W.libraryCalls==1,'first tool tick: '..W.libraryCalls)
+    weapon.ownWeaponDynamicData.cur=20;W.advance(5000)
+    hud.isRiding=true;W.advance(500);hud.isRiding=false;W.advance(500)
+    assert(W.libraryCalls==1,'library fetched again: '..W.libraryCalls)
+    expectShown(hud,20,ORANGE,'drawn with the kept library')
+end
+
 print=realprint
-print('PASS: no work without a HUD; announced and scanned adoption; default objects refused; widgets once per HUD inside Canvas_WeaponInfo; ratios, colours, text and clamping; no writes on an unchanged tick, everything redrawn after any hide; NaN/zero maximum; riding, hidden tile/icon, invalid weapon/data; unarmed priority; second HUD cleanup; error logged once and recovery.')
+print('PASS: no work without a HUD; announced and scanned adoption; default objects refused; widgets once per HUD inside Canvas_WeaponInfo; ratios, colours, text and clamping; no writes on an unchanged tick, everything redrawn after any hide; NaN/zero maximum; riding, hidden tile/icon, invalid weapon/data; unarmed priority; second HUD cleanup; error logged once and recovery; library fetched once.')
