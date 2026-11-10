@@ -14,7 +14,7 @@ Repair shortcuts only act in the repair-bench menu. Disabled buttons remain disa
 
 ## Install
 
-**Client only.** Requires a compatible [UE4SS Experimental (Palworld)](https://www.nexusmods.com/palworld/mods/2237) installation; no server mod is required. UE4SS is not bundled.
+**Client only.** Requires a compatible [UE4SS Experimental (Palworld)](https://www.nexusmods.com/palworld/mods/2237) installation; no server mod is required. UE4SS is not bundled. The loader must provide `ExecuteInGameThreadWithDelay` and `LoopInGameThreadWithDelay` (available in the tested Palworld fork **2281fa31**); otherwise Palished stops at load with a message in the log.
 
 1. Close Palworld. Extract the `Palished` folder into your existing UE4SS `Mods` folder, usually `Pal/Binaries/Win64/ue4ss/Mods/`.
 2. Use the loader you already have. For a Workshop-installed UE4SS loader, its mod folder may instead be `Mods/NativeMods/UE4SS/Mods/`.

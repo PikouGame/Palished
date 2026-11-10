@@ -7,6 +7,9 @@ The unarmed HUD uses the native fist and localized name, without durability/ammo
 Equipment slot alignment follows the native Weapon and Head groups.
 
 CLIENT ONLY. Compatible UE4SS for Palworld is required, not bundled.
+The loader must provide ExecuteInGameThreadWithDelay and
+LoopInGameThreadWithDelay (available in the tested Palworld fork 2281fa31);
+otherwise Palished stops at load with a message in the log.
 Close Palworld; extract Palished into your existing UE4SS Mods directory.
 Keep enabled.txt. If using a mods list, enable Palished without replacing
 other entries. Do not install duplicate UE4SS loaders or duplicate mod copies.

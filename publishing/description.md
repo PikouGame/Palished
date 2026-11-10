@@ -30,7 +30,7 @@ localized labels. Repair costs stay unchanged.
 
 ## Getting started
 
-**Client only.** Requires a compatible [Palworld UE4SS loader](https://www.nexusmods.com/palworld/mods/2237).
+**Client only.** Requires a recent [UE4SS loader for Palworld](https://www.nexusmods.com/palworld/mods/2237).
 
 1. Close Palworld.
 2. Copy `Palished` into your existing UE4SS `Mods` folder.
