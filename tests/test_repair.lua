@@ -87,6 +87,16 @@ w.visibility=3;press('single');press('all');assert(count.single==1 and count.all
 w.Overlay_Repairing.visible=true;press('single');press('all');assert(count.single==1 and count.all==3,'repair overlay ignored');w.Overlay_Repairing.visible=false
 w.active=false;press('single');press('all');assert(count.single==1 and count.all==3,'inactive/cached menu');w.active=true
 w.visible=false;press('single');assert(count.single==1,'hidden menu');w.visible=true
+-- every other refusal of the dispatch, one state at a time: neither key may repair
+local panel=w.WBP_IngameMenu_Repair
+local function stays(what)press('single');press('all');assert(count.single==1 and count.all==3,what)end
+w.enabled=false;stays('disabled window');w.enabled=true
+panel.valid=false;stays('invalid panel');panel.valid=true
+panel.visible=false;stays('hidden panel');panel.visible=true
+single.visible=false;all.visible=false;stays('hidden buttons');single.visible=true;all.visible=true
+single.valid=false;all.valid=false;stays('invalid buttons');single.valid=true;all.valid=true
+single.WBP_PalInvisibleButton.valid=false;all.WBP_PalInvisibleButton.valid=false;stays('invalid hit areas');single.WBP_PalInvisibleButton.valid=true;all.WBP_PalInvisibleButton.valid=true
+single.WBP_PalInvisibleButton.enabled=false;all.WBP_PalInvisibleButton.enabled=false;stays('disabled hit areas');single.WBP_PalInvisibleButton.enabled=true;all.WBP_PalInvisibleButton.enabled=true
 w.valid=false;press('all');assert(count.all==3,'destroyed menu');refused('single');refused('all')
 w.valid=true;for _,fn in pairs(hooks)do fn({get=function()return w end})end;advance(200)
 keys.single();advance(35);keys.all();advance(400);assert(count.single==2 and count.all==3,'cooldown')
